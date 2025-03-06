@@ -4,22 +4,22 @@ export const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: "#FFF",
+        backgroundColor: "#FFFFFF",
     },
     backButton: {
-        marginBottom: 20,
+        marginBottom: 10,
     },
     backIcon: {
-        fontSize: 24,
+        fontSize: 34,
     },
     title: {
-        fontSize: 22,
+        fontSize: 30,
         fontWeight: "bold",
         textAlign: "center",
         marginBottom: 20,
     },
     row: {
-        flexDirection: "row",
+        flexDirection: "column",
         justifyContent: "space-between",
     },
     signUpButton: {
@@ -45,6 +45,8 @@ export const styles = StyleSheet.create({
     line: {
         flex: 1,
         height: 1,
-        backgroundColor: "#ccc",
+        backgroundColor: "#000000",
     },
 });
+
+export default styles;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 import * as SecureStore from "expo-secure-store";
-import { login as apiLogin, logout as apiLogout } from "../Services/authService";
+import { login as apiLogin, logout as apiLogout } from "@/app/services/authService"; // Ensure correct import path
+import { Platform } from "react-native";
 
 interface User {
     token: string;
@@ -23,9 +24,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     useEffect(() => {
         const checkAuthStatus = async () => {
             setLoading(true);
-            const token = await SecureStore.getItemAsync("token");
-            if (token) {
-                setUser({ token });  // Replace with actual user data if needed
+            if (Platform.OS !== "web") {
+                try {
+                    const token = await SecureStore.getItemAsync("token");
+                    if (token) {
+                        setUser({ token });
+                    }
+                } catch (error) {
+                    console.error("Error checking auth status:", error);
+                }
             }
             setLoading(false);
         };
@@ -34,21 +41,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, []);
 
     const login = async (email: string, password: string) => {
-        const data = await apiLogin(email, password);
-        if (data.token) {
-            await SecureStore.setItemAsync("token", data.token);
-            setUser({ token: data.token });
+        try {
+            const data = await apiLogin(email, password);
+            if (data.token) {
+                await SecureStore.setItemAsync("token", data.token);
+                setUser({ token: data.token });
+            }
+        } catch (error) {
+            console.error("Login failed:", error);
+            throw error;
         }
     };
 
     const logout = async () => {
-        await apiLogout();
-        await SecureStore.deleteItemAsync("token");
-        setUser(null);
+        try {
+            await apiLogout();
+            await SecureStore.deleteItemAsync("token");
+            setUser(null);
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
     };
 
     return (
-        <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout, loading }}>
+        <AuthContext.Provider value={{ user, isAuthenticated: user !== null && Boolean(user.token), login, logout, loading }}>
             {children}
         </AuthContext.Provider>
     );
