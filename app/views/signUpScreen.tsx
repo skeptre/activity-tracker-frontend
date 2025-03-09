@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { styles } from "../styles/signUpStyles";
+import { styles } from "@/app/styles/signUpStyles";
 import { SignUpViewModel } from "../viewmodels/signUpViewModel";
 import InputField from "../components/InputField";
 import SocialLoginButton from "../components/SocialLoginButton";

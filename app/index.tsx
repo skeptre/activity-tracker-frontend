@@ -1,6 +1,6 @@
-import { View, Text, ImageBackground } from "react-native";
+
 import React from "react";
-import SignUpScreen from "@/app/screens/signUpScreen";
+import SignUpScreen from "@/app/views/signUpScreen";
 import {AuthProvider} from "@/app/hooks/useAuth";
 
 

@@ -1,10 +1,12 @@
 import { StyleSheet } from "react-native";
+import {Colors} from '../constants/Colors';
+import {useColorScheme} from "@/app/hooks/useColorScheme";
 
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: "#FFFFFF",
+        backgroundColor: "#F8F9FA",
     },
     backButton: {
         marginBottom: 10,
@@ -23,14 +25,14 @@ export const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
     signUpButton: {
-        backgroundColor: "#C64963",
+        backgroundColor: "#007BFF",
         borderRadius: 10,
         padding: 15,
         alignItems: "center",
         marginVertical: 10,
     },
     signUpText: {
-        color: "#FFF",
+        color: "#8E8E93",
         fontSize: 18,
         fontWeight: "bold",
     },
