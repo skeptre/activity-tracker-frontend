@@ -6,7 +6,7 @@ import { SignUpViewModel } from "../viewmodels/signUpViewModel";
 import InputField from "../components/InputField";
 import SocialLoginButton from "../components/SocialLoginButton";
 
-export default function SignUpScreen() {
+export default function SignUp() {
     const navigation = useNavigation();
     const { signUp, loading } = SignUpViewModel();
 

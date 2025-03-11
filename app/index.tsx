@@ -1,16 +1,14 @@
-
 import React from "react";
-import SignUpScreen from "@/app/views/signUpScreen";
-import {AuthProvider} from "@/app/hooks/useAuth";
+import { AuthProvider } from "./hooks/useAuth"; // Import the provider
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { Stack } from "expo-router";
 
-
-const App = () => {
+export default function App() {
     return (
-       <AuthProvider>
-           <SignUpScreen>
-
-           </SignUpScreen>
-       </AuthProvider>
-    )
+        <AuthProvider>
+            <SafeAreaProvider>
+                <Stack />
+            </SafeAreaProvider>
+        </AuthProvider>
+    );
 }
-export default App
