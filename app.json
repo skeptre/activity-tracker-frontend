@@ -1,17 +1,5 @@
 {
   "expo": {
-    "name": "frontend-app",
-    "slug": "frontend-app",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.frontendapp"
-    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
@@ -19,13 +7,18 @@
       },
       "package": "com.anonymous.frontendapp"
     },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
+    "experiments": {
+      "typedRoutes": true
     },
+    "icon": "./assets/images/icon.png",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.frontendapp"
+    },
+    "name": "frontend-app",
+    "newArchEnabled": true,
+    "orientation": "portrait",
     "plugins": [
-      "expo-router",
       [
         "expo-splash-screen",
         {
@@ -37,8 +30,13 @@
       ],
       "expo-secure-store"
     ],
-    "experiments": {
-      "typedRoutes": true
+    "scheme": "myapp",
+    "slug": "frontend-app",
+    "userInterfaceStyle": "automatic",
+    "version": "1.0.0",
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/images/favicon.png"
     }
   }
 }

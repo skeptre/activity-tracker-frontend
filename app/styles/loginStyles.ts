@@ -10,27 +10,38 @@ export const styles = StyleSheet.create({
         marginBottom: 10,
     },
     backIcon: {
-        fontSize: 24,
+        fontSize: 34,
+        color: "#000",
     },
     title: {
-        fontSize: 24,
+        fontSize: 28,
         fontWeight: "bold",
+        textAlign: "center",
         marginBottom: 20,
     },
-    row: {
-        flexDirection: "column",
-        justifyContent: "space-between",
+    forgotPasswordText: {
+        color: "#D32F2F",
+        textAlign: "right",
+        marginVertical: 10,
     },
-    signUpButton: {
-        backgroundColor: "#D9534F",
+    loginButton: {
+        backgroundColor: "#C44E58",
         borderRadius: 10,
         padding: 15,
         alignItems: "center",
         marginVertical: 10,
     },
-    signUpText: {
+    loginText: {
         color: "#fff",
         fontSize: 18,
+        fontWeight: "bold",
+    },
+    signupText: {
+        textAlign: "center",
+        marginVertical: 10,
+    },
+    signupLink: {
+        color: "#C44E58",
         fontWeight: "bold",
     },
     orContainer: {
@@ -40,6 +51,7 @@ export const styles = StyleSheet.create({
     },
     orText: {
         marginHorizontal: 10,
+        fontWeight: "bold",
     },
     line: {
         flex: 1,

@@ -1,25 +1,47 @@
 import { useState } from "react";
+import AuthService from "@/app/services/authService";
+import { User } from "@/app/models/UserModel";
 
-export function SignUpViewModel() {
+export const SignUpViewModel = () => {
     const [loading, setLoading] = useState(false);
 
-    const signUp = async (form: any) => {
-        if (!form.email || !form.password || !form.firstName || !form.lastName) {
-            alert("Please fill all fields");
-            return;
-        }
-
+    const signUp = async (userData: User) => {
         setLoading(true);
         try {
-            // Simulated API Call
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-            alert("Account created successfully!");
+            const response = await AuthService.register(userData);
+            console.log("Sign Up successful", response);
         } catch (error) {
-            alert("Signup failed. Try again!");
+            console.error("Sign Up failed", error);
         } finally {
             setLoading(false);
         }
     };
 
-    return { signUp, loading };
-}
+    const signIn = async (email: string, password: string) => {
+        setLoading(true);
+        try {
+            const response = await AuthService.login(email, password);
+            console.log("Login successful", response);
+        } catch (error) {
+            console.error("Login failed", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const signOut = async () => {
+        setLoading(true);
+        try {
+            await AuthService.logout();
+            console.log("Logout successful");
+        } catch (error) {
+            console.error("Logout failed", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return { signUp, signIn, signOut, loading };
+};
+
+export default SignUpViewModel;

@@ -70,6 +70,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
 };
 
+// Custom hook for using authentication context
 export const useAuth = () => {
     const context = useContext(AuthContext);
     if (!context) {
@@ -77,3 +78,6 @@ export const useAuth = () => {
     }
     return context;
 };
+
+// **Add default export**
+export default AuthProvider;
