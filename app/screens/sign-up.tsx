@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {View, Text, TouchableOpacity, Alert, SafeAreaView} from "react-native";
-import {useNavigation} from "@react-navigation/native";
+// import {useNavigation} from "@react-navigation/native";
 import styles from "../styles/signUpStyles";
 import {SignUpViewModel} from "../viewmodels/signUpViewModel";
 import InputField from "@/app/components/InputField";
