@@ -8,15 +8,22 @@ interface InputFieldProps extends TextInputProps {
 export default function InputField({ placeholder, ...props }: InputFieldProps) {
     return (
         <View style={styles.inputContainer}>
-            <TextInput style={styles.input} placeholder={placeholder} {...props} />
+            <TextInput
+                style={styles.input}
+                placeholder={placeholder}
+                placeholderTextColor="#999"
+                textContentType="password"
+                {...props} />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     inputContainer: {
-        backgroundColor: "#FEEFEF",
+        backgroundColor: "#fff",
         borderRadius: 10,
+        borderWidth: 3,
+        borderColor: "#ccc",
         paddingHorizontal: 15,
         height: 50,
         justifyContent: "center",
@@ -24,6 +31,6 @@ const styles = StyleSheet.create({
     },
     input: {
         fontSize: 16,
-        color: "#333",
+        color: "#000",
     },
 });

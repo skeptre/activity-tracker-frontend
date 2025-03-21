@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        // flex: 1,
         backgroundColor: "#fff",
         padding: 20,
     },
@@ -13,9 +13,11 @@ export const styles = StyleSheet.create({
         fontSize: 24,
     },
     title: {
-        fontSize: 24,
+        fontSize: 34,
         fontWeight: "bold",
         marginBottom: 20,
+        marginTop: 0,
+        textAlign: "center",
     },
     row: {
         flexDirection: "column",
