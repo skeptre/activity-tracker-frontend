@@ -5,7 +5,7 @@ import { AuthResponse } from "@/app/models/AuthResponse";
 // ✅ REGISTER: Create an account
 const register = async (userData: User): Promise<AuthResponse> => {
     try {
-        const response = await fetch(`${Config.BASE_URL}/auth/register`, {
+        const response = await fetch(`${Config.BASE_URL}/users`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(userData),

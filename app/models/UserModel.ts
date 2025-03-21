@@ -1,7 +1,6 @@
 export interface User {
-    firstName: string;
-    lastName: string;
-    username?: string;  // Optional if not required
+    first_name: string;
+    last_name: string;
     email: string;
     password: string;
 }

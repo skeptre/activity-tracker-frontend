@@ -13,7 +13,6 @@ export default function SignUpScreen() {
     const [form, setForm] = useState({
         firstName: "",
         lastName: "",
-        username: "",
         email: "",
         password: "",
         confirmPassword: "",
@@ -23,7 +22,6 @@ export default function SignUpScreen() {
         if (
             !form.firstName ||
             !form.lastName ||
-            !form.username ||
             !form.email ||
             !form.password ||
             !form.confirmPassword
@@ -36,8 +34,8 @@ export default function SignUpScreen() {
             Alert.alert("Passwords do not match.");
             return;
         }
-
-        await signUp(form);
+        const User = {first_name: form.firstName, last_name : form.lastName, email : form.email, password : form.password};
+        await signUp(User);
     };
 
     return (
@@ -54,8 +52,6 @@ export default function SignUpScreen() {
                 <InputField placeholder="Last Name" value={form.lastName}
                             onChangeText={(text) => setForm({...form, lastName: text})}/>
             </View>
-            <InputField placeholder="Username" value={form.username}
-                        onChangeText={(text) => setForm({...form, username: text})}/>
             <InputField placeholder="Email Address" value={form.email} keyboardType="email-address"
                         onChangeText={(text) => setForm({...form, email: text})}/>
             <InputField placeholder="Password" secureTextEntry value={form.password}
