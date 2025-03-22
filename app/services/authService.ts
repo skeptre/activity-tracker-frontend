@@ -23,7 +23,7 @@ const register = async (userData: User): Promise<AuthResponse> => {
 };
 
 // ✅ LOGIN: Authenticate user & get token
-const login = async (email: string, password: string): Promise<AuthResponse> => {
+export const login = async (email: string, password: string): Promise<AuthResponse> => {
     try {
         const response = await fetch(`${Config.BASE_URL}/auth/login`, {
             method: "POST",
@@ -43,7 +43,7 @@ const login = async (email: string, password: string): Promise<AuthResponse> => 
 };
 
 // ✅ LOGOUT: Remove session on the backend
-const logout = async (): Promise<void> => {
+export const logout = async (): Promise<void> => {
     try {
         const response = await fetch(`${Config.BASE_URL}/auth/logout`, {
             method: "POST",

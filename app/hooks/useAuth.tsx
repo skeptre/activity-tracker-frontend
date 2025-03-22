@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 import * as SecureStore from "expo-secure-store";
-import { login as apiLogin, logout as apiLogout } from "@/app/services/authService"; // Ensure correct import path
+import  { login as apiLogin, logout as apiLogout }  from "@/app/services/authService";
 import { Platform } from "react-native";
 
 interface User {
