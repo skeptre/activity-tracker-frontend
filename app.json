@@ -27,16 +27,11 @@
           "backgroundColor": "#ffffff",
           "imageWidth": "500%"
         }
-      ],
-      "expo-secure-store"
+      ]
     ],
     "scheme": "myapp",
     "slug": "frontend-app",
     "userInterfaceStyle": "automatic",
-    "version": "1.0.0",
-    "web": {
-      "bundler": "metro",
-      "favicon": "./app/assets/appIcons/1024.png"
-    }
+    "version": "1.0.0"
   }
 }

@@ -1,10 +1,12 @@
 import { StyleSheet } from "react-native";
+import { Colors } from "@/app/constants/Colors";
 
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
-        padding: 20,
+        backgroundColor: Colors.background,
+        padding: 24,
+        justifyContent: "center",
     },
     backButton: {
         marginBottom: 10,
@@ -14,49 +16,63 @@ export const styles = StyleSheet.create({
         color: "#000",
     },
     title: {
-        fontSize: 28,
-        fontWeight: "bold",
+        fontSize: 32,
+        fontWeight: "700",
+        color: Colors.textPrimary,
+        marginBottom: 32,
         textAlign: "center",
-        marginBottom: 20,
     },
     forgotPasswordText: {
-        color: "#D32F2F",
+        color: Colors.textSecondary,
         textAlign: "right",
-        marginVertical: 10,
+        marginTop: 8,
+        marginBottom: 24,
+        fontSize: 14,
     },
     loginButton: {
-        backgroundColor: "#C44E58",
-        borderRadius: 10,
-        padding: 15,
+        backgroundColor: Colors.primary,
+        borderRadius: 12,
+        padding: 16,
         alignItems: "center",
-        marginVertical: 10,
+        marginVertical: 16,
+        shadowColor: Colors.shadow,
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
     },
     loginText: {
-        color: "#fff",
-        fontSize: 18,
-        fontWeight: "bold",
+        color: Colors.background,
+        fontSize: 16,
+        fontWeight: "600",
     },
     signupText: {
         textAlign: "center",
-        marginVertical: 10,
+        marginVertical: 16,
+        color: Colors.textSecondary,
+        fontSize: 14,
     },
     signupLink: {
-        color: "#C44E58",
-        fontWeight: "bold",
+        color: Colors.primary,
+        fontWeight: "600",
     },
     orContainer: {
         flexDirection: "row",
         alignItems: "center",
-        marginVertical: 15,
+        marginVertical: 24,
     },
     orText: {
-        marginHorizontal: 10,
-        fontWeight: "bold",
+        marginHorizontal: 12,
+        color: Colors.textSecondary,
+        fontSize: 14,
     },
     line: {
         flex: 1,
         height: 1,
-        backgroundColor: "#000",
+        backgroundColor: Colors.border,
     },
 });
 

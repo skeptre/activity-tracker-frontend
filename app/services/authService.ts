@@ -1,6 +1,5 @@
 import Config from "@/app/constants/Config";
-import { User } from "@/app/models/UserModel";
-import { AuthResponse } from "@/app/models/AuthResponse";
+import { User, AuthResponse } from "@/app/types/auth";
 
 // ✅ REGISTER: Create an account
 const register = async (userData: User): Promise<AuthResponse> => {

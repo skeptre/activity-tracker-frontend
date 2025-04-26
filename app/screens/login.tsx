@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import { styles } from "@/app/styles/loginStyles";
-import InputField from "../components/InputField";
-import SocialLoginButton from "../components/SocialLoginButton";
+import InputField from "@/app/components/InputField";
+import SocialLoginButton from "@/app/components/SocialLoginButton";
 import { useAuth } from "@/app/hooks/useAuth";
+import { AuthStackParamList } from "@/app/types/navigation";
+
+type LoginScreenNavigationProp = StackNavigationProp<AuthStackParamList, 'Login'>;
 
 export default function Login() {
-    const navigation = useNavigation();
+    const navigation = useNavigation<LoginScreenNavigationProp>();
     const { login, loading } = useAuth(); // Get login function from Auth context
 
     const [form, setForm] = useState({
@@ -29,11 +33,6 @@ export default function Login() {
 
     return (
         <View style={styles.container}>
-            {/* Back Button */}
-            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                <Text style={styles.backIcon}>←</Text>
-            </TouchableOpacity>
-
             {/* Title */}
             <Text style={styles.title}>Sign in</Text>
 
@@ -64,7 +63,7 @@ export default function Login() {
             {/* Signup Link */}
             <Text style={styles.signupText}>
                 Don't have an account?{" "}
-                <Text style={styles.signupLink} onPress={() => navigation.navigate("sign-up" as never)}>
+                <Text style={styles.signupLink} onPress={() => navigation.navigate('SignUp')}>
                     Sign up
                 </Text>
             </Text>
@@ -81,4 +80,4 @@ export default function Login() {
             <SocialLoginButton platform="facebook" text="Sign in with Facebook" />
         </View>
     );
-}
+} 

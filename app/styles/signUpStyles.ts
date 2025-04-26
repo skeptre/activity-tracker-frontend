@@ -1,54 +1,81 @@
-import { StyleSheet } from "react-native";
-
+import { StyleSheet } from 'react-native';
+import { Colors } from '@/app/constants/Colors';
 
 export const styles = StyleSheet.create({
     container: {
-        // flex: 1,
-        backgroundColor: "#fff",
-        padding: 20,
+        flex: 1,
+        backgroundColor: Colors.background,
+        padding: 24,
     },
     backButton: {
-        marginBottom: 10,
+        marginTop: 40,
+        marginBottom: 16,
     },
     backIcon: {
-        fontSize: 24,
+        fontSize: 28,
+        color: Colors.textPrimary,
     },
     title: {
-        fontSize: 34,
-        fontWeight: "bold",
-        marginBottom: 20,
-        marginTop: 0,
-        textAlign: "center",
+        fontSize: 32,
+        fontWeight: '700',
+        color: Colors.textPrimary,
+        marginBottom: 32,
+        textAlign: 'center',
     },
-    row: {
-        flexDirection: "column",
-        justifyContent: "space-between",
+    formContainer: {
+        flex: 1,
+        justifyContent: 'flex-start',
+        paddingTop: 20,
     },
     signUpButton: {
-        backgroundColor: "#D9534F",
-        borderRadius: 10,
-        padding: 15,
-        alignItems: "center",
-        marginVertical: 10,
+        backgroundColor: Colors.primary,
+        borderRadius: 12,
+        padding: 16,
+        alignItems: 'center',
+        marginTop: 24,
+        marginBottom: 16,
+        shadowColor: Colors.shadow,
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
     },
     signUpText: {
-        color: "#fff",
-        fontSize: 18,
-        fontWeight: "bold",
+        color: Colors.background,
+        fontSize: 16,
+        fontWeight: '600',
+    },
+    loginText: {
+        textAlign: 'center',
+        marginVertical: 16,
+        color: Colors.textSecondary,
+        fontSize: 14,
+    },
+    loginLink: {
+        color: Colors.primary,
+        fontWeight: '600',
     },
     orContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginVertical: 15,
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 24,
+        paddingHorizontal: 20,
     },
     orText: {
-        marginHorizontal: 10,
+        marginHorizontal: 12,
+        color: Colors.textSecondary,
+        fontSize: 14,
     },
     line: {
         flex: 1,
         height: 1,
-        backgroundColor: "#000",
+        backgroundColor: Colors.border,
+    },
+    socialButtonsContainer: {
+        gap: 12,
+        paddingHorizontal: 20,
     },
 });
-
-export default styles;
