@@ -1,5 +1,6 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
 import { User, AuthState } from '../models/User';
+import { authService } from '../services/authService';
 
 class AuthViewModel {
     private state: AuthState = {
@@ -38,36 +39,44 @@ class AuthViewModel {
     }
 
     async login(email: string, password: string): Promise<void> {
-        try {
+        runInAction(() => {
             this.state.isLoading = true;
             this.state.error = null;
-            
+        });
+        try {
             // TODO: Implement actual login logic here
             // const response = await authService.login(email, password);
-            // this.state.user = response.user;
-            // this.notifyAuthStateListeners();
-            
+            // runInAction(() => {
+            //     this.state.user = response.user;
+            //     this.notifyAuthStateListeners();
+            // });
         } catch (error) {
-            this.state.error = error instanceof Error ? error.message : 'An error occurred';
+            runInAction(() => {
+                this.state.error = error instanceof Error ? error.message : 'An error occurred';
+            });
         } finally {
-            this.state.isLoading = false;
+            runInAction(() => {
+                this.state.isLoading = false;
+            });
         }
     }
 
-    async signUp(email: string, password: string, name?: string): Promise<void> {
-        try {
+    async signUp(first_name: string, last_name: string, email: string, password: string): Promise<void> {
+        runInAction(() => {
             this.state.isLoading = true;
             this.state.error = null;
-            
-            // TODO: Implement actual signup logic here
-            // const response = await authService.signUp(email, password, name);
-            // this.state.user = response.user;
-            // this.notifyAuthStateListeners();
-            
+        });
+        try {
+            await authService.register({ first_name, last_name, email, password });
+            // Optionally, you can auto-login or navigate after registration
         } catch (error) {
-            this.state.error = error instanceof Error ? error.message : 'An error occurred';
+            runInAction(() => {
+                this.state.error = error instanceof Error ? error.message : 'An error occurred';
+            });
         } finally {
-            this.state.isLoading = false;
+            runInAction(() => {
+                this.state.isLoading = false;
+            });
         }
     }
 
