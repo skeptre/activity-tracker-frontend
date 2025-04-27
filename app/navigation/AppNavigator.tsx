@@ -1,44 +1,23 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
-import SignUpScreen from "@/app/screens/sign-up";
-import LoginScreen from "@/app/screens/login";
-import HomeScreen from "@/app/screens/home";
-import { useAuth } from "@/app/hooks/useAuth";
+import { observer } from 'mobx-react-lite';
+import { AuthNavigator } from "@/app/features/auth/navigation/AuthNavigator";
+import { MainNavigator } from "@/app/features/home/navigation/MainNavigator";
+import { authViewModel } from "@/app/features/auth/viewModels/AuthViewModel";
 import Loader from "@/app/components/Loader";
-import { RootStackParamList, AuthStackParamList, MainStackParamList } from "@/app/types/navigation";
+import { RootStackParamList } from "@/app/types/navigation";
 
 const RootStack = createStackNavigator<RootStackParamList>();
-const AuthStack = createStackNavigator<AuthStackParamList>();
-const MainStack = createStackNavigator<MainStackParamList>();
 
-function AuthNavigator() {
-    return (
-        <AuthStack.Navigator screenOptions={{ headerShown: false }}>
-            <AuthStack.Screen name="Login" component={LoginScreen} />
-            <AuthStack.Screen name="SignUp" component={SignUpScreen} />
-        </AuthStack.Navigator>
-    );
-}
-
-function MainNavigator() {
-    return (
-        <MainStack.Navigator screenOptions={{ headerShown: false }}>
-            <MainStack.Screen name="Home" component={HomeScreen} />
-        </MainStack.Navigator>
-    );
-}
-
-export default function AppNavigator() {
-    const { user, loading } = useAuth();
-
-    if (loading) {
+const AppNavigator = observer(() => {
+    if (authViewModel.isLoading) {
         return <Loader />;
     }
 
     return (
         <NavigationContainer>
             <RootStack.Navigator screenOptions={{ headerShown: false }}>
-                {user ? (
+                {authViewModel.user ? (
                     <RootStack.Screen name="Main" component={MainNavigator} />
                 ) : (
                     <RootStack.Screen name="Auth" component={AuthNavigator} />
@@ -46,4 +25,6 @@ export default function AppNavigator() {
             </RootStack.Navigator>
         </NavigationContainer>
     );
-}
+});
+
+export default AppNavigator;
