@@ -1,4 +1,4 @@
-import { Config } from "@/app/config/constants";
+import { Config } from "@/app/constants/constants";
 import { User, AuthResponse } from "@/app/types/auth";
 
 // ✅ REGISTER: Create an account

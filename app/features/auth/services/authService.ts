@@ -1,6 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LoginCredentials, RegisterCredentials, AuthResponse } from '../types';
+import { SignUpFormData, UserProfile } from '../types/auth';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3333';
 
@@ -53,4 +54,37 @@ export const authService = {
         const token = await AsyncStorage.getItem('session_token');
         return !!token;
     },
+};
+
+export const signUpService = async (data: SignUpFormData): Promise<UserProfile> => {
+    try {
+        // Mock implementation
+        return {
+            id: 'user_123',
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            username: data.username,
+            createdAt: new Date().toISOString(),
+        };
+    } catch (error) {
+        console.error('Sign up error:', error);
+        throw error;
+    }
+};
+
+export const signInService = async (email: string, password: string): Promise<UserProfile> => {
+    try {
+        // Mock implementation
+        return {
+            id: 'user_123',
+            firstName: 'John',
+            lastName: 'Doe',
+            email: email,
+            createdAt: new Date().toISOString(),
+        };
+    } catch (error) {
+        console.error('Sign in error:', error);
+        throw error;
+    }
 }; 
