@@ -1,6 +1,7 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 import { User, AuthState } from '../models/User';
 import { authService } from '../services/authService';
+import { UserProfile } from '../types/auth';
 
 class AuthViewModel {
     private state: AuthState = {
@@ -25,6 +26,20 @@ class AuthViewModel {
 
     get error(): string | null {
         return this.state.error;
+    }
+
+    setUser(userProfile: UserProfile): void {
+        runInAction(() => {
+            // Convert UserProfile to User
+            this.state.user = {
+                id: userProfile.id,
+                email: userProfile.email,
+                name: `${userProfile.firstName} ${userProfile.lastName}`,
+                createdAt: new Date(userProfile.createdAt),
+                updatedAt: new Date() // Use current date for updatedAt since it's not in UserProfile
+            };
+            this.notifyAuthStateListeners();
+        });
     }
 
     onAuthStateChanged(listener: (user: User | null) => void): () => void {

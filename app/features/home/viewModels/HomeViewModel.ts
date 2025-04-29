@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import { Activity, HomeState } from '../models/Activity';
+import { activityService } from '../../../services/activityService';
 
 class HomeViewModel {
     private state: HomeState = {
@@ -39,9 +40,9 @@ class HomeViewModel {
             this.state.isLoading = true;
             this.state.error = null;
             
-            // TODO: Implement actual API call to fetch activities
-            // const response = await activityService.getActivities(this.state.selectedDate);
-            // this.state.activities = response.activities;
+            // Use activityService to fetch activities
+            const activities = await activityService.getActivities();
+            this.state.activities = activities;
             
         } catch (error) {
             this.state.error = error instanceof Error ? error.message : 'An error occurred';
@@ -55,9 +56,9 @@ class HomeViewModel {
             this.state.isLoading = true;
             this.state.error = null;
             
-            // TODO: Implement actual API call to create activity
-            // const response = await activityService.createActivity(activity);
-            // this.state.activities.push(response.activity);
+            // Use activityService to create activity
+            const newActivity = await activityService.createActivity(activity);
+            this.state.activities.push(newActivity);
             
         } catch (error) {
             this.state.error = error instanceof Error ? error.message : 'An error occurred';
@@ -71,12 +72,12 @@ class HomeViewModel {
             this.state.isLoading = true;
             this.state.error = null;
             
-            // TODO: Implement actual API call to update activity
-            // const response = await activityService.updateActivity(id, updates);
-            // const index = this.state.activities.findIndex(a => a.id === id);
-            // if (index !== -1) {
-            //     this.state.activities[index] = response.activity;
-            // }
+            // Use activityService to update activity
+            const updatedActivity = await activityService.updateActivity(id, updates);
+            const index = this.state.activities.findIndex(a => a.id === id);
+            if (index !== -1) {
+                this.state.activities[index] = updatedActivity;
+            }
             
         } catch (error) {
             this.state.error = error instanceof Error ? error.message : 'An error occurred';
@@ -90,9 +91,47 @@ class HomeViewModel {
             this.state.isLoading = true;
             this.state.error = null;
             
-            // TODO: Implement actual API call to delete activity
-            // await activityService.deleteActivity(id);
-            // this.state.activities = this.state.activities.filter(a => a.id !== id);
+            // Use activityService to delete activity
+            await activityService.deleteActivity(id);
+            this.state.activities = this.state.activities.filter(a => a.id !== id);
+            
+        } catch (error) {
+            this.state.error = error instanceof Error ? error.message : 'An error occurred';
+        } finally {
+            this.state.isLoading = false;
+        }
+    }
+
+    async startActivity(id: string): Promise<void> {
+        try {
+            this.state.isLoading = true;
+            this.state.error = null;
+            
+            // Use activityService to start activity
+            const updatedActivity = await activityService.startActivity(id);
+            const index = this.state.activities.findIndex(a => a.id === id);
+            if (index !== -1) {
+                this.state.activities[index] = updatedActivity;
+            }
+            
+        } catch (error) {
+            this.state.error = error instanceof Error ? error.message : 'An error occurred';
+        } finally {
+            this.state.isLoading = false;
+        }
+    }
+
+    async stopActivity(id: string): Promise<void> {
+        try {
+            this.state.isLoading = true;
+            this.state.error = null;
+            
+            // Use activityService to stop activity
+            const updatedActivity = await activityService.stopActivity(id);
+            const index = this.state.activities.findIndex(a => a.id === id);
+            if (index !== -1) {
+                this.state.activities[index] = updatedActivity;
+            }
             
         } catch (error) {
             this.state.error = error instanceof Error ? error.message : 'An error occurred';

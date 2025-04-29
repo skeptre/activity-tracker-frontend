@@ -19,7 +19,7 @@ const AppNavigator = observer(() => {
             <RootStack.Navigator screenOptions={{ headerShown: false }}>
                 {authViewModel.user ? (
                     <RootStack.Screen name="Main" component={MainNavigator} />
-                ) : (
+            ) : (
                     <RootStack.Screen name="Auth" component={AuthNavigator} />
                 )}
             </RootStack.Navigator>
