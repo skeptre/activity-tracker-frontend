@@ -3,6 +3,7 @@ import { MainStackParamList } from "../types/navigation";
 import HomeView from "../views/HomeView";
 import CreateActivityView from "../views/CreateActivityView";
 import ActivityTrackerView from "../views/ActivityTrackerView";
+import SettingsView from "../views/SettingsView";
 
 const MainStack = createStackNavigator<MainStackParamList>();
 
@@ -12,6 +13,7 @@ export function MainNavigator() {
             <MainStack.Screen name="Home" component={HomeView} />
             <MainStack.Screen name="CreateActivity" component={CreateActivityView} />
             <MainStack.Screen name="ActivityTracker" component={ActivityTrackerView} />
+            <MainStack.Screen name="Settings" component={SettingsView} />
         </MainStack.Navigator>
     );
 } 

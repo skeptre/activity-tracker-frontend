@@ -45,6 +45,31 @@ export const homeStyles = StyleSheet.create({
     borderWidth: 3,
     borderColor: '#16a34a',
   },
+  defaultAvatar: {
+    backgroundColor: '#f0fdf4',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 0,
+  },
+  avatarText: {
+    fontSize: 36,
+    fontWeight: '600',
+    color: '#16a34a',
+  },
+  mockDataButton: {
+    backgroundColor: '#f0fdf4',
+    borderWidth: 1,
+    borderColor: '#86efac',
+    borderRadius: 8,
+    padding: 12,
+    marginVertical: 10,
+    alignItems: 'center',
+  },
+  mockDataText: {
+    color: '#16a34a',
+    fontSize: 14,
+    textAlign: 'center',
+  },
   statsContainer: {
     marginVertical: 20,
     backgroundColor: '#ffffff',
@@ -64,6 +89,17 @@ export const homeStyles = StyleSheet.create({
     fontWeight: '600',
     color: '#1f2937',
     marginBottom: 10,
+  },
+  loadingContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: '#94a3b8',
+    padding: 20,
+    fontSize: 14,
   },
   awardsSection: {
     marginTop: 10,

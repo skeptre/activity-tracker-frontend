@@ -1,6 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { AuthStackParamList } from "../types/navigation";
-import LoginView from "../views/LoginView";
+import LoginView from "../views/LoginViewRefactored";
 import SignUpView from "../views/SignUpView";
 
 const AuthStack = createStackNavigator<AuthStackParamList>();

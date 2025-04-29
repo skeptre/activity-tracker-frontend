@@ -19,6 +19,7 @@ import Button from '../../../components/Button';
 import ControlledInput from '../../../components/form/ControlledInput';
 import ErrorMessage from '../../../components/form/ErrorMessage';
 import useFormWithValidation from '../../../hooks/useFormWithValidation';
+import { authViewModel } from '../viewModels/AuthViewModel';
 
 type LoginScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<AuthStackParamList, 'Login'>,
@@ -48,8 +49,12 @@ const LoginViewRefactored: React.FC = () => {
       setServerError(null);
       
       try {
-        await signInService(data.email, data.password);
-        navigation.navigate('Home' as keyof MainStackParamList);
+        // Get user profile from sign-in service
+        const userProfile = await signInService(data.email, data.password);
+        
+        // Set the user in the authViewModel
+        // This will trigger the AppNavigator to show the Main stack with Home screen
+        authViewModel.setUser(userProfile);
       } catch (error) {
         setServerError('Invalid email or password. Please try again.');
       }

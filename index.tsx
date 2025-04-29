@@ -6,6 +6,7 @@ import { ThemeProvider as NavigationThemeProvider, DarkTheme, DefaultTheme } fro
 import { useColorScheme } from "./app/hooks/useColorScheme";
 import AppNavigator from "./app/navigation/AppNavigator";
 import { ThemeProvider } from "./app/providers/ThemeProvider";
+import { StepCounterProvider } from "./app/providers/StepCounterProvider";
 
 function App() {
     const colorScheme = useColorScheme(); // Detect light/dark mode
@@ -13,11 +14,13 @@ function App() {
     return (
         <ThemeProvider>
             <AuthProvider>
-                <SafeAreaProvider>
-                    <NavigationThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-                        <AppNavigator />
-                    </NavigationThemeProvider>
-                </SafeAreaProvider>
+                <StepCounterProvider>
+                    <SafeAreaProvider>
+                        <NavigationThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+                            <AppNavigator />
+                        </NavigationThemeProvider>
+                    </SafeAreaProvider>
+                </StepCounterProvider>
             </AuthProvider>
         </ThemeProvider>
     );

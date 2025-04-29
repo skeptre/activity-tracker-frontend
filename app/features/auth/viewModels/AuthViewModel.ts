@@ -2,11 +2,15 @@ import { makeAutoObservable, runInAction } from 'mobx';
 import { User, AuthState } from '../models/User';
 import { authService } from '../services/authService';
 import { UserProfile } from '../types/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// Key for storing user data in AsyncStorage
+const USER_STORAGE_KEY = 'user_data';
 
 class AuthViewModel {
     private state: AuthState = {
         user: null,
-        isLoading: false,
+        isLoading: true, // Start with loading state
         error: null
     };
 
@@ -14,6 +18,42 @@ class AuthViewModel {
 
     constructor() {
         makeAutoObservable(this);
+        // Load saved user data on startup
+        this.loadSavedUserData();
+    }
+
+    // Load user data from AsyncStorage on app startup
+    private async loadSavedUserData(): Promise<void> {
+        try {
+            // First check if we have a session token
+            const token = await AsyncStorage.getItem('session_token');
+            if (!token) {
+                runInAction(() => {
+                    this.state.isLoading = false;
+                });
+                return;
+            }
+
+            // Try to load user data
+            const userData = await AsyncStorage.getItem(USER_STORAGE_KEY);
+            if (userData) {
+                const user = JSON.parse(userData);
+                runInAction(() => {
+                    this.state.user = {
+                        ...user,
+                        createdAt: new Date(user.createdAt),
+                        updatedAt: new Date(user.updatedAt)
+                    };
+                    this.notifyAuthStateListeners();
+                });
+            }
+        } catch (error) {
+            console.error('Error loading saved user data:', error);
+        } finally {
+            runInAction(() => {
+                this.state.isLoading = false;
+            });
+        }
     }
 
     get user(): User | null {
@@ -31,15 +71,29 @@ class AuthViewModel {
     setUser(userProfile: UserProfile): void {
         runInAction(() => {
             // Convert UserProfile to User
-            this.state.user = {
+            const user = {
                 id: userProfile.id,
                 email: userProfile.email,
                 name: `${userProfile.firstName} ${userProfile.lastName}`,
                 createdAt: new Date(userProfile.createdAt),
                 updatedAt: new Date() // Use current date for updatedAt since it's not in UserProfile
             };
+            
+            this.state.user = user;
             this.notifyAuthStateListeners();
+            
+            // Persist user data to AsyncStorage
+            this.saveUserData(user);
         });
+    }
+
+    // Save user data to AsyncStorage
+    private async saveUserData(user: User): Promise<void> {
+        try {
+            await AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+        } catch (error) {
+            console.error('Error saving user data:', error);
+        }
     }
 
     onAuthStateChanged(listener: (user: User | null) => void): () => void {
@@ -96,9 +150,23 @@ class AuthViewModel {
     }
 
     logout(): void {
+        // Clear user from state
         this.state.user = null;
         this.state.error = null;
         this.notifyAuthStateListeners();
+        
+        // Remove user data from AsyncStorage
+        this.clearUserData();
+    }
+    
+    // Clear user data from AsyncStorage
+    private async clearUserData(): Promise<void> {
+        try {
+            await AsyncStorage.removeItem(USER_STORAGE_KEY);
+            // The session token is already removed in authService.logout()
+        } catch (error) {
+            console.error('Error clearing user data:', error);
+        }
     }
 }
 
