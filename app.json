@@ -16,7 +16,6 @@
       "bundleIdentifier": "com.anonymous.frontendapp"
     },
     "name": "frontend-app",
-    "newArchEnabled": true,
     "orientation": "portrait",
     "plugins": [
       [

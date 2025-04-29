@@ -88,39 +88,18 @@ export const userService = {
         return JSON.parse(rankingsData);
       }
       
-      // Create demo rankings
+      // Create rankings with just the current user
       const currentUserSteps = currentUser.steps || Math.floor(Math.random() * 3000) + 7000;
       
-      // Demo users with randomized steps based on current user
       const rankings: UserRanking[] = [
-        {
-          id: 'user1',
-          name: 'Alex Chen',
-          steps: Math.floor(Math.random() * 2000) + currentUserSteps,
-          position: 1,
-          profileImage: 'https://randomuser.me/api/portraits/men/33.jpg',
-        },
         {
           id: currentUser.id,
           name: currentUser.name,
           steps: currentUserSteps,
-          position: 2,
+          position: 1,
           profileImage: currentUser.profileImage,
-        },
-        {
-          id: 'user3',
-          name: 'Jordan Taylor',
-          steps: Math.max(currentUserSteps - Math.floor(Math.random() * 1500), 3000),
-          position: 3,
-          profileImage: 'https://randomuser.me/api/portraits/women/54.jpg',
         }
       ];
-      
-      // Sort by steps and update positions
-      rankings.sort((a, b) => b.steps - a.steps);
-      rankings.forEach((user, index) => {
-        user.position = index + 1;
-      });
       
       // Store rankings
       await AsyncStorage.setItem(RANKING_STORAGE_KEY, JSON.stringify(rankings));
@@ -174,39 +153,11 @@ export const userService = {
       
       const demoRankings: UserRanking[] = [
         {
-          id: 'user1',
-          name: 'Alex Chen',
-          steps: 9843,
-          position: 1,
-          profileImage: 'https://randomuser.me/api/portraits/men/33.jpg',
-        },
-        {
           id: currentUser.id,
           name: currentUser.name,
           steps: 8567,
-          position: 2,
+          position: 1,
           profileImage: currentUser.profileImage,
-        },
-        {
-          id: 'user3',
-          name: 'Jordan Taylor',
-          steps: 7321,
-          position: 3,
-          profileImage: 'https://randomuser.me/api/portraits/women/54.jpg',
-        },
-        {
-          id: 'user4',
-          name: 'Morgan Lee',
-          steps: 6754,
-          position: 4,
-          profileImage: 'https://randomuser.me/api/portraits/women/14.jpg',
-        },
-        {
-          id: 'user5',
-          name: 'Sam Wilson',
-          steps: 5932,
-          position: 5,
-          profileImage: 'https://randomuser.me/api/portraits/men/62.jpg',
         }
       ];
       

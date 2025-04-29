@@ -1,4 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+
+const windowHeight = Dimensions.get('window').height;
 
 export const homeStyles = StyleSheet.create({
   container: {
@@ -33,6 +35,7 @@ export const homeStyles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 20,
+    paddingBottom: 100, // Extra padding at bottom to ensure content is scrollable
   },
   profileSection: {
     alignItems: 'center',
@@ -128,6 +131,10 @@ export const homeStyles = StyleSheet.create({
     borderTopColor: '#e2e8f0',
     justifyContent: 'space-around',
     alignItems: 'center',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   navItem: {
     alignItems: 'center',

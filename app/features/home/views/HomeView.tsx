@@ -20,6 +20,7 @@ import AwardItem from '../components/AwardItem';
 import homeStyles from '../styles/homeStyles';
 import { useStepCounter } from '../../../providers/StepCounterProvider';
 import { userService, User, UserRanking } from '../../../services/userService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type HomeViewNavigationProp = StackNavigationProp<MainStackParamList, 'Home'>;
 
@@ -125,16 +126,14 @@ const HomeView: React.FC<HomeViewProps> = observer(({ navigation }) => {
       
       {/* Header */}
       <View style={homeStyles.header}>
-        <TouchableOpacity style={homeStyles.menuButton}>
-          <Feather name="menu" size={24} color="#ffffff" />
-        </TouchableOpacity>
-        <Text style={homeStyles.headerTitle}>step tracker (Community)</Text>
+        <Text style={homeStyles.headerTitle}>Activity Tracker</Text>
       </View>
       
       {/* Main Content */}
       <ScrollView 
         style={homeStyles.content} 
-        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 120 }}
+        showsVerticalScrollIndicator={true}
         refreshControl={
           <RefreshControl
             refreshing={isStepsLoading || isUserLoading}
