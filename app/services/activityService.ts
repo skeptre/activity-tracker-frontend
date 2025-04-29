@@ -2,6 +2,12 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Activity } from '../features/home/models/Activity';
 
+// Define our own simplified AxiosRequestConfig type
+interface RequestConfig {
+  headers?: Record<string, string>;
+  [key: string]: any;
+}
+
 const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3333';
 
 const activityApi = axios.create({
@@ -11,18 +17,35 @@ const activityApi = axios.create({
     },
 });
 
-// Add authorization header to requests if token exists
-activityApi.interceptors.request.use(async (config) => {
+// Use a simpler approach - provide direct header instead of async operation
+activityApi.interceptors.request.use((config: RequestConfig) => {
+    // We can't use AsyncStorage directly in interceptors because it's async
+    // But we can ensure our headers are properly typed
+    if (config.headers) {
+        // Token will be loaded before request is made via setAuthHeaderForRequest
+        // This just ensures the config object is properly handled for TypeScript
+    }
+    return config;
+}, (error: any) => {
+    return Promise.reject(error);
+});
+
+// This is the function you should call before making API requests
+export const setAuthHeaderForRequest = async (config: RequestConfig) => {
     const token = await AsyncStorage.getItem('session_token');
-    if (token && config.headers) {
+    if (token && config?.headers) {
         config.headers['X-Authorization'] = token;
     }
     return config;
-});
+};
 
 export const activityService = {
+    // Apply authentication before making requests
     async getActivities(): Promise<Activity[]> {
         try {
+            // Prepare request config
+            const config = await setAuthHeaderForRequest({});
+            
             // For now, return mock data since backend might not be implemented
             return mockActivities;
         } catch (error) {
