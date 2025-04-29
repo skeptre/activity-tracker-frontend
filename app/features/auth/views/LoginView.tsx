@@ -12,15 +12,13 @@ import {
   Pressable,
   StatusBar,
   SafeAreaView,
-  TextInputProps,
-  Alert
+  TextInputProps
 } from 'react-native';
 import { useNavigation, CompositeNavigationProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { AuthStackParamList } from '../types/navigation';
 import { MainStackParamList } from '../../home/types/navigation';
 import { signInService } from '../services/authService';
-import apiService from '../../../services/apiService';
 import { authViewModel } from '../viewModels/AuthViewModel';
 
 type LoginScreenNavigationProp = CompositeNavigationProp<
@@ -46,7 +44,6 @@ const LoginView: React.FC = () => {
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isTestingConnection, setIsTestingConnection] = useState<boolean>(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -85,50 +82,6 @@ const LoginView: React.FC = () => {
       setIsLoading(false);
     }
   }, [formData, validateForm]);
-
-  const handleTestConnection = useCallback(async () => {
-    setIsTestingConnection(true);
-    setServerError(null);
-    
-    try {
-      // First do a simple connection test
-      const result = await apiService.testConnection();
-      
-      if (result.success) {
-        // If basic connection works, perform the endpoint test
-        const endpointResults = await apiService.testApiEndpoints();
-        
-        // Format the results for display
-        let message = `${result.message}\n\nEndpoint Status:`;
-        let allEndpointsSuccessful = true;
-        
-        Object.entries(endpointResults).forEach(([name, status]) => {
-          message += `\n- ${name}: ${status.success ? '✅' : '❌'} ${status.message}`;
-          if (!status.success) allEndpointsSuccessful = false;
-        });
-        
-        // Show different alerts based on the test results
-        if (allEndpointsSuccessful) {
-          Alert.alert('Connection Test Successful', message);
-        } else {
-          Alert.alert('Partial Connection Issues', message);
-        }
-      } else {
-        // Try fallback if first attempt fails
-        const fallbackResult = await apiService.testConnectionFallback();
-        
-        if (fallbackResult.success) {
-          Alert.alert('Connection Test', `Backend is reachable but has issues:\n${fallbackResult.message}\n\nTimestamp: ${fallbackResult.timestamp}`);
-        } else {
-          Alert.alert('Connection Failed', `Cannot connect to the backend (port 3333):\n${fallbackResult.message}\n\nMake sure the server is running and available.`);
-        }
-      }
-    } catch (error) {
-      Alert.alert('Connection Error', `There was a problem testing the connection:\n${error instanceof Error ? error.message : String(error)}`);
-    } finally {
-      setIsTestingConnection(false);
-    }
-  }, []);
 
   const handleChange = useCallback((name: keyof LoginFormData, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -292,20 +245,6 @@ const LoginView: React.FC = () => {
                 <Text style={styles.signUpLink}>Sign up</Text>
               </TouchableOpacity>
             </View>
-
-            {/* Connection test button */}
-            <TouchableOpacity
-              style={styles.testConnectionButton}
-              onPress={handleTestConnection}
-              disabled={isTestingConnection}
-              activeOpacity={0.8}
-            >
-              {isTestingConnection ? (
-                <ActivityIndicator color="#ffffff" size="small" />
-              ) : (
-                <Text style={styles.testConnectionButtonText}>Test Backend Connection</Text>
-              )}
-            </TouchableOpacity>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -435,25 +374,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
     marginLeft: 5,
-  },
-  testConnectionButton: {
-    backgroundColor: '#0ea5e9',
-    height: 44,
-    borderRadius: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    marginTop: 8,
-    shadowColor: '#0ea5e9',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  testConnectionButtonText: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontWeight: '500',
   }
 });
 
