@@ -5,7 +5,11 @@
         "foregroundImage": "./app/assets/appIcons/1024.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.frontendapp"
+      "package": "com.anonymous.frontendapp",
+      "permissions": [
+        "INTERNET",
+        "ACCESS_NETWORK_STATE"
+      ]
     },
     "experiments": {
       "typedRoutes": true
