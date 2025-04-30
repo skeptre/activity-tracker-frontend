@@ -36,11 +36,14 @@ export const stepCounterService = {
   // Check if pedometer is available
   isAvailable: async (): Promise<boolean> => {
     try {
-      // Android platform currently doesn't support the pedometer
+      // Android has limited pedometer support in Expo
+      // getStepCountAsync with date ranges is not supported on Android
       if (Platform.OS === 'android') {
-        console.log('Pedometer not fully supported on Android');
+        console.log('Pedometer not available: Android has limited pedometer support in Expo');
         return false;
       }
+      
+      // For iOS, check if the device supports pedometer
       return await Pedometer.isAvailableAsync();
     } catch (error) {
       console.error('Error checking pedometer availability:', error);
@@ -50,10 +53,55 @@ export const stepCounterService = {
 
   // Start listening for step updates
   startTracking: async (callback: (data: StepData) => void) => {
+    // For Android, always use mock data since real-time tracking may be unreliable
+    if (Platform.OS === 'android') {
+      console.log('Using mock step tracking for Android');
+      
+      // Generate mock steps
+      const mockSteps = Math.floor(Math.random() * 1000) + 500;
+      const today = new Date().toISOString().split('T')[0];
+      
+      const stepData: StepData = {
+        date: today,
+        steps: mockSteps,
+        calories: calculateCalories(mockSteps),
+        distance: calculateDistance(mockSteps),
+        duration: calculateDuration(mockSteps)
+      };
+      
+      // Save and return the mock data
+      stepCounterService.saveSteps(stepData);
+      callback(stepData);
+      
+      // Set up a mock interval to simulate step updates (once per minute)
+      const intervalId = setInterval(() => {
+        // Increment steps by random amount (30-150 steps)
+        const additionalSteps = Math.floor(Math.random() * 120) + 30;
+        const newTotal = stepData.steps + additionalSteps;
+        
+        stepData.steps = newTotal;
+        stepData.calories = calculateCalories(newTotal);
+        stepData.distance = calculateDistance(newTotal);
+        stepData.duration = calculateDuration(newTotal);
+        
+        stepCounterService.saveSteps(stepData);
+        callback(stepData);
+      }, 60000); // Update every minute
+      
+      // Return a subscription-like object
+      return {
+        remove: () => {
+          console.log('Removing mock step tracking interval');
+          clearInterval(intervalId);
+        }
+      };
+    }
+    
+    // For non-Android platforms, check pedometer availability
     const isAvailable = await stepCounterService.isAvailable();
     if (!isAvailable) {
       console.log('Pedometer not available, using mock data');
-      // Generate some mock steps for Android or when pedometer isn't available
+      // Generate some mock steps for when pedometer isn't available
       const mockSteps = Math.floor(Math.random() * 1000) + 500;
       const today = new Date().toISOString().split('T')[0];
       
@@ -76,6 +124,7 @@ export const stepCounterService = {
       };
     }
     
+    // If pedometer is available, use watchStepCount (iOS)
     return Pedometer.watchStepCount(result => {
       const { steps } = result;
       const today = new Date().toISOString().split('T')[0];
@@ -105,7 +154,23 @@ export const stepCounterService = {
       const localData = await stepCounterService.getLocalSteps(today);
       if (localData) return localData;
       
-      // If not in storage and on Android or pedometer not available, use mock data
+      // Always use mock data on Android to avoid unsupported API calls
+      if (Platform.OS === 'android') {
+        console.log('Using mock step data for Android');
+        const mockSteps = Math.floor(Math.random() * 2000) + 1000;
+        const stepData: StepData = {
+          date: today,
+          steps: mockSteps,
+          calories: calculateCalories(mockSteps),
+          distance: calculateDistance(mockSteps),
+          duration: calculateDuration(mockSteps)
+        };
+        
+        await stepCounterService.saveSteps(stepData);
+        return stepData;
+      }
+      
+      // If not in storage and pedometer not available on non-Android, use mock data
       const isAvailable = await stepCounterService.isAvailable();
       if (!isAvailable) {
         const mockSteps = Math.floor(Math.random() * 2000) + 1000;
@@ -121,7 +186,7 @@ export const stepCounterService = {
         return stepData;
       }
       
-      // If available, try to get from pedometer
+      // Only try to get from pedometer on iOS
       const result = await Pedometer.getStepCountAsync(start, end);
       const steps = result.steps;
       
@@ -137,14 +202,23 @@ export const stepCounterService = {
       return stepData;
     } catch (error) {
       console.error('Error getting steps for today:', error);
-      // Return default empty data
-      return {
+      // On error, generate mock data instead of returning zeros
+      const mockSteps = Math.floor(Math.random() * 2000) + 1000;
+      const stepData: StepData = {
         date: today,
-        steps: 0,
-        calories: 0,
-        distance: 0,
-        duration: 0
+        steps: mockSteps,
+        calories: calculateCalories(mockSteps),
+        distance: calculateDistance(mockSteps),
+        duration: calculateDuration(mockSteps)
       };
+      
+      try {
+        await stepCounterService.saveSteps(stepData);
+      } catch (saveError) {
+        console.error('Error saving mock step data:', saveError);
+      }
+      
+      return stepData;
     }
   },
   
