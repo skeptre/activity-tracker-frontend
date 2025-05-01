@@ -82,10 +82,14 @@ const HomeView: React.FC<HomeViewProps> = observer(({ navigation }) => {
   useEffect(() => {
     const updateUserSteps = async () => {
       if (todayData.steps > 0) {
+        // Update steps and get updated rankings
         await userService.updateSteps(todayData.steps);
-        // Refresh rankings
         const rankings = await userService.getUserRankings();
         setUserRankings(rankings);
+        
+        // Also refresh current user data
+        const user = await userService.getCurrentUser();
+        setCurrentUser(user);
       }
     };
     

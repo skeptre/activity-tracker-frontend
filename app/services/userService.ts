@@ -98,31 +98,52 @@ export const userService = {
   // Get user rankings (currently generates simulated rankings)
   getUserRankings: async (): Promise<UserRanking[]> => {
     try {
-      // For now, let's generate simulated rankings with current user
+      // Get current user
       const currentUser = await userService.getCurrentUser();
       if (!currentUser) return [];
       
       // Try to get existing rankings
       const rankingsData = await AsyncStorage.getItem(RANKING_STORAGE_KEY);
+      let rankings: UserRanking[] = [];
+      
       if (rankingsData) {
-        return JSON.parse(rankingsData);
+        rankings = JSON.parse(rankingsData);
+        
+        // Check if current user exists in rankings
+        const userIndex = rankings.findIndex(r => r.id === currentUser.id);
+        
+        if (userIndex === -1) {
+          // Add current user if not found
+          rankings.push({
+            id: currentUser.id,
+            name: currentUser.name,
+            steps: currentUser.steps || Math.floor(Math.random() * 3000) + 7000,
+            position: rankings.length + 1,
+            profileImage: currentUser.profileImage,
+          });
+        } else {
+          // Update current user's data
+          rankings[userIndex] = {
+            ...rankings[userIndex],
+            name: currentUser.name,
+            steps: currentUser.steps || rankings[userIndex].steps,
+            profileImage: currentUser.profileImage,
+          };
+        }
+      } else {
+        // No existing rankings, create new ones with demo data
+        await userService.generateDemoData();
+        const newRankingsData = await AsyncStorage.getItem(RANKING_STORAGE_KEY);
+        if (newRankingsData) {
+          rankings = JSON.parse(newRankingsData);
+        }
       }
       
-      // Create rankings with just the current user
-      const currentUserSteps = currentUser.steps || Math.floor(Math.random() * 3000) + 7000;
-      
-      const rankings: UserRanking[] = [
-        {
-          id: currentUser.id,
-          name: currentUser.name,
-          steps: currentUserSteps,
-          position: 1,
-          profileImage: currentUser.profileImage,
-        }
-      ];
-      
-      // Store rankings
-      await AsyncStorage.setItem(RANKING_STORAGE_KEY, JSON.stringify(rankings));
+      // Sort and update positions
+      rankings.sort((a, b) => b.steps - a.steps);
+      rankings.forEach((user, index) => {
+        user.position = index + 1;
+      });
       
       return rankings;
     } catch (error) {
@@ -171,15 +192,42 @@ export const userService = {
       const currentUser = await userService.getCurrentUser();
       if (!currentUser) return false;
       
+      // Generate random steps for current user if not set
+      const currentUserSteps = currentUser.steps || Math.floor(Math.random() * 3000) + 7000;
+      
       const demoRankings: UserRanking[] = [
         {
           id: currentUser.id,
           name: currentUser.name,
-          steps: 8567,
+          steps: currentUserSteps,
           position: 1,
           profileImage: currentUser.profileImage,
+        },
+        {
+          id: 'demo1',
+          name: 'Sarah Johnson',
+          steps: Math.floor(Math.random() * 3000) + 6000,
+          position: 2,
+        },
+        {
+          id: 'demo2',
+          name: 'Mike Chen',
+          steps: Math.floor(Math.random() * 3000) + 5000,
+          position: 3,
+        },
+        {
+          id: 'demo3',
+          name: 'Emma Wilson',
+          steps: Math.floor(Math.random() * 3000) + 4000,
+          position: 4,
         }
       ];
+      
+      // Sort rankings by steps and update positions
+      demoRankings.sort((a, b) => b.steps - a.steps);
+      demoRankings.forEach((user, index) => {
+        user.position = index + 1;
+      });
       
       await AsyncStorage.setItem(RANKING_STORAGE_KEY, JSON.stringify(demoRankings));
       return true;
