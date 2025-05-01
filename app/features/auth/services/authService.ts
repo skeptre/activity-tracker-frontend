@@ -1,8 +1,10 @@
 import axios from 'axios';
+import type { AxiosError } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LoginCredentials, RegisterCredentials, AuthResponse } from '../types';
 import { SignUpFormData, UserProfile } from '../types/auth';
 import { Config } from '../../../constants/constants';
+import { Platform } from 'react-native';
 
 // Use the Config from constants
 const API_URL = Config.BASE_URL;
@@ -12,7 +14,41 @@ const authApi = axios.create({
     headers: {
         'Content-Type': 'application/json',
     },
+    // Add timeout configuration
+    timeout: 10000, // 10 seconds
+    // Add additional headers for Android if needed
+    ...(Platform.OS === 'android' ? {
+        headers: {
+            'Accept': 'application/json',
+        }
+    } : {})
 });
+
+// Add response interceptor for better error handling
+authApi.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.code === 'ECONNABORTED') {
+            throw new Error('Request timed out. Please check your internet connection.');
+        }
+        
+        if (!error.response) {
+            throw new Error('Network error. Please check your internet connection and try again.');
+        }
+        
+        // Handle specific error cases
+        switch (error.response.status) {
+            case 401:
+                throw new Error('Invalid credentials. Please check your email and password.');
+            case 404:
+                throw new Error('Server not found. Please check the API configuration.');
+            case 500:
+                throw new Error('Server error. Please try again later.');
+            default:
+                throw error;
+        }
+    }
+);
 
 export const authService = {
     async login(credentials: LoginCredentials): Promise<AuthResponse> {
@@ -63,6 +99,16 @@ export const signUpService = async (data: Omit<SignUpFormData, 'confirmPassword'
         console.log('Attempting to sign up user:', data.email);
         console.log('API URL:', API_URL);
         
+        // Add platform-specific logging
+        if (__DEV__) {
+            console.log('Platform:', Platform.OS);
+            console.log('API Configuration:', {
+                baseURL: authApi.defaults.baseURL,
+                timeout: authApi.defaults.timeout,
+                headers: authApi.defaults.headers,
+            });
+        }
+        
         // Convert from our form structure to the API expected format
         const credentials: RegisterCredentials = {
             first_name: data.firstName,
@@ -84,13 +130,21 @@ export const signUpService = async (data: Omit<SignUpFormData, 'confirmPassword'
             email: data.email,
             createdAt: new Date().toISOString(),
         };
-    } catch (error) {
+    } catch (err: unknown) {
+        const error = err as AxiosError;
         console.error('Sign up error:', error);
-        // Log additional error information if available
-        const axiosError = error as any;
-        if (axiosError.response) {
-            console.error('API Error Response:', axiosError.response.data);
-            console.error('API Error Status:', axiosError.response.status);
+        // Enhanced error logging
+        if (error.isAxiosError) {
+            console.error('Network Error Details:', {
+                message: error.message,
+                code: error.code,
+                config: {
+                    url: error.config?.url,
+                    method: error.config?.method,
+                    headers: error.config?.headers,
+                },
+                response: error.response?.data,
+            });
         }
         throw error;
     }
@@ -100,6 +154,16 @@ export const signInService = async (email: string, password: string): Promise<Us
     try {
         console.log('Attempting to sign in user:', email);
         console.log('API URL:', API_URL);
+        
+        // Add platform-specific logging
+        if (__DEV__) {
+            console.log('Platform:', Platform.OS);
+            console.log('API Configuration:', {
+                baseURL: authApi.defaults.baseURL,
+                timeout: authApi.defaults.timeout,
+                headers: authApi.defaults.headers,
+            });
+        }
         
         // Use the actual API service to login
         const response = await authService.login({ email, password });
@@ -115,13 +179,21 @@ export const signInService = async (email: string, password: string): Promise<Us
             email: response.user.email,
             createdAt: new Date().toISOString(),
         };
-    } catch (error) {
+    } catch (err: unknown) {
+        const error = err as AxiosError;
         console.error('Sign in error:', error);
-        // Log additional error information if available
-        const axiosError = error as any;
-        if (axiosError.response) {
-            console.error('API Error Response:', axiosError.response.data);
-            console.error('API Error Status:', axiosError.response.status);
+        // Enhanced error logging
+        if (error.isAxiosError) {
+            console.error('Network Error Details:', {
+                message: error.message,
+                code: error.code,
+                config: {
+                    url: error.config?.url,
+                    method: error.config?.method,
+                    headers: error.config?.headers,
+                },
+                response: error.response?.data,
+            });
         }
         throw error;
     }

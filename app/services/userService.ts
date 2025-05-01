@@ -108,15 +108,15 @@ export const userService = {
       
       if (rankingsData) {
         rankings = JSON.parse(rankingsData);
-        
+      
         // Check if current user exists in rankings
         const userIndex = rankings.findIndex(r => r.id === currentUser.id);
-        
+      
         if (userIndex === -1) {
           // Add current user if not found
           rankings.push({
-            id: currentUser.id,
-            name: currentUser.name,
+          id: currentUser.id,
+          name: currentUser.name,
             steps: currentUser.steps || Math.floor(Math.random() * 3000) + 7000,
             position: rankings.length + 1,
             profileImage: currentUser.profileImage,
@@ -127,7 +127,7 @@ export const userService = {
             ...rankings[userIndex],
             name: currentUser.name,
             steps: currentUser.steps || rankings[userIndex].steps,
-            profileImage: currentUser.profileImage,
+          profileImage: currentUser.profileImage,
           };
         }
       } else {
