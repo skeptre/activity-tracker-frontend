@@ -136,6 +136,12 @@ export const homeStyles = StyleSheet.create({
     left: 0,
     right: 0,
   },
+  navButtonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '60%',
+  },
   navItem: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -148,10 +154,23 @@ export const homeStyles = StyleSheet.create({
   navLabel: {
     fontSize: 12,
     color: '#64748b',
+    marginTop: 4,
+  },
+  activeNavLabel: {
+    color: '#16a34a',
+    fontWeight: '500',
   },
   navHomeItem: {
     alignItems: 'center',
     justifyContent: 'center',
+    flex: 1,
+    marginRight: 20,
+  },
+  navSettingsItem: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    marginLeft: 20,
   },
   navHomeButton: {
     width: 48,
@@ -165,6 +184,14 @@ export const homeStyles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 4,
+  },
+  navSettingsButton: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#f1f5f9',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   navHomeIcon: {
     fontSize: 22,
