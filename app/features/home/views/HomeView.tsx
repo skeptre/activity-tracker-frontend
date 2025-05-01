@@ -16,7 +16,6 @@ import { MainStackParamList } from '../types/navigation';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import StepCircle from '../components/StepCircle';
 import RankingItem from '../components/RankingItem';
-import AwardItem from '../components/AwardItem';
 import homeStyles from '../styles/homeStyles';
 import { useStepCounter } from '../../../providers/StepCounterProvider';
 import { userService, User, UserRanking } from '../../../services/userService';
@@ -111,11 +110,6 @@ const HomeView: React.FC<HomeViewProps> = observer(({ navigation }) => {
     }
   };
 
-  const awards = [
-    { id: '1', emoji: '🔥', label: 'HOT' },
-    { id: '2', emoji: '🦄', label: 'OMG' },
-  ];
-
   const navigateToSettings = () => {
     navigation.navigate('Settings');
   };
@@ -177,7 +171,7 @@ const HomeView: React.FC<HomeViewProps> = observer(({ navigation }) => {
           </TouchableOpacity>
         )}
         
-        {/* Rankings and Awards */}
+        {/* Rankings Section - Removed Awards */}
         <View style={homeStyles.statsContainer}>
           <View style={homeStyles.rankingSection}>
             <Text style={homeStyles.sectionTitle}>Today's Ranking:</Text>
@@ -200,40 +194,28 @@ const HomeView: React.FC<HomeViewProps> = observer(({ navigation }) => {
               <Text style={homeStyles.emptyText}>No rankings available</Text>
             )}
           </View>
-          
-          <View style={homeStyles.awardsSection}>
-            <Text style={homeStyles.sectionTitle}>Awards:</Text>
-            <View style={homeStyles.awardsList}>
-              {awards.map(award => (
-                <AwardItem 
-                  key={award.id}
-                  emoji={award.emoji}
-                  label={award.label}
-                />
-              ))}
-            </View>
-          </View>
         </View>
-        
-        <TouchableOpacity style={homeStyles.inventoryPrompt}>
-          <Text style={homeStyles.inventoryPromptText}>→ Go and check your inventory</Text>
-        </TouchableOpacity>
       </ScrollView>
       
       {/* Navigation Bar */}
       <View style={homeStyles.navbar}>
         <View style={{ flex: 1 }} />
         
-        <TouchableOpacity style={homeStyles.navHomeItem}>
-          <View style={homeStyles.navHomeButton}>
-            <MaterialCommunityIcons name="home" size={22} color="#ffffff" />
-          </View>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={homeStyles.navItem} onPress={navigateToSettings}>
-          <MaterialCommunityIcons name="cog" size={22} color="#64748b" />
-          <Text style={homeStyles.navLabel}>Settings</Text>
-        </TouchableOpacity>
+        <View style={homeStyles.navButtonsContainer}>
+          <TouchableOpacity style={homeStyles.navHomeItem}>
+            <View style={homeStyles.navHomeButton}>
+              <MaterialCommunityIcons name="home" size={24} color="#ffffff" />
+            </View>
+            <Text style={[homeStyles.navLabel, homeStyles.activeNavLabel]}>Home</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={homeStyles.navSettingsItem} onPress={navigateToSettings}>
+            <View style={homeStyles.navSettingsButton}>
+              <MaterialCommunityIcons name="cog" size={24} color="#64748b" />
+            </View>
+            <Text style={homeStyles.navLabel}>Settings</Text>
+          </TouchableOpacity>
+        </View>
         
         <View style={{ flex: 1 }} />
       </View>
