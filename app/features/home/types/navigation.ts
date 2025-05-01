@@ -4,4 +4,8 @@ export type MainStackParamList = {
     ActivityTracker: undefined;
     Settings: undefined;
     Profile: undefined;
+    Workouts: undefined;
+    WorkoutDetails: { workoutId: number };
+    AddWorkout: undefined;
+    EditProfile: undefined;
 }; 

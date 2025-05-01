@@ -6,9 +6,15 @@ const RANKING_STORAGE_KEY = 'USER_RANKINGS';
 
 export interface User {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
+  name: string; // Full name (computed from firstName + lastName)
   email: string;
   profileImage?: string;
+  createdAt: string;
+  age?: number;
+  height?: number;
+  weight?: number;
   steps?: number;
   lastActive?: string;
 }
@@ -38,10 +44,16 @@ export const userService = {
       }
       
       // Create a basic user object from auth data
+      const [firstName, ...lastNameParts] = (authUser.name || 'User').split(' ');
+      const lastName = lastNameParts.join(' ');
+      
       return {
         id: authUser.id,
+        firstName: firstName,
+        lastName: lastName || '',
         name: authUser.name || 'User',
         email: authUser.email,
+        createdAt: new Date().toISOString(),
         lastActive: new Date().toISOString()
       };
     } catch (error) {
@@ -60,10 +72,18 @@ export const userService = {
       const storedData = await AsyncStorage.getItem(USER_STORAGE_KEY);
       const allUserData = storedData ? JSON.parse(storedData) : {};
       
+      // If firstName or lastName is being updated, update the full name
+      let updatedData = { ...userData };
+      if (userData.firstName !== undefined || userData.lastName !== undefined) {
+        const newFirstName = userData.firstName ?? currentUser.firstName;
+        const newLastName = userData.lastName ?? currentUser.lastName;
+        updatedData.name = `${newFirstName} ${newLastName}`.trim();
+      }
+      
       // Update current user
       allUserData[currentUser.id] = {
         ...currentUser,
-        ...userData,
+        ...updatedData,
         lastUpdated: new Date().toISOString()
       };
       
@@ -146,10 +166,10 @@ export const userService = {
   },
   
   // Generate demo data for testing
-  generateDemoData: async (): Promise<void> => {
+  generateDemoData: async (): Promise<boolean> => {
     try {
       const currentUser = await userService.getCurrentUser();
-      if (!currentUser) return;
+      if (!currentUser) return false;
       
       const demoRankings: UserRanking[] = [
         {
@@ -162,8 +182,14 @@ export const userService = {
       ];
       
       await AsyncStorage.setItem(RANKING_STORAGE_KEY, JSON.stringify(demoRankings));
+      return true;
     } catch (error) {
       console.error('Error generating demo data:', error);
+      return false;
     }
+  },
+
+  updateUser: async (userData: Partial<User>): Promise<boolean> => {
+    return await userService.updateUserData(userData);
   }
 }; 

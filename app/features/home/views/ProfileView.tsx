@@ -23,49 +23,32 @@ const ProfileView: React.FC = () => {
   const navigation = useNavigation<ProfileNavigationProp>();
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
-  const [metrics, setMetrics] = useState<any>(null);
   const { todayData } = useStepCounter();
 
-  // Mock data for demonstration
-  const mockMetrics = {
-    age: 32,
-    height: 175, // cm
-    weight: 75.5, // kg
-    bmi: 24.7,
-    lastUpdated: new Date().toISOString()
+  const loadUserData = async () => {
+    setIsLoading(true);
+    try {
+      const userData = await userService.getCurrentUser();
+      setUser(userData);
+    } catch (error) {
+      console.error('Error loading profile data:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const mockWorkoutStats = {
-    totalWorkouts: 12,
-    caloriesBurned: 3450,
-    avgDuration: 45, // minutes
-  };
-
+  // Load user data on mount and when screen comes into focus
   useEffect(() => {
-    const loadUserData = async () => {
-      setIsLoading(true);
-      try {
-        // In a real app, we would fetch this data from API
-        const userData = await userService.getCurrentUser();
-        setUser(userData);
-        
-        // Mock metrics data (would come from API)
-        setMetrics(mockMetrics);
-      } catch (error) {
-        console.error('Error loading profile data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
     loadUserData();
-  }, []);
+
+    const unsubscribe = navigation.addListener('focus', () => {
+      loadUserData();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const goBack = () => navigation.goBack();
-
-  const navigateToEditProfile = () => {
-    navigation.navigate('Settings');
-  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -74,6 +57,16 @@ const ProfileView: React.FC = () => {
       month: 'short',
       day: 'numeric'
     });
+  };
+
+  // Calculate BMI if height and weight are available
+  const calculateBMI = () => {
+    if (user?.height && user?.weight) {
+      const heightInMeters = user.height / 100;
+      const bmi = user.weight / (heightInMeters * heightInMeters);
+      return bmi.toFixed(1);
+    }
+    return '--';
   };
 
   return (
@@ -86,9 +79,7 @@ const ProfileView: React.FC = () => {
           <Ionicons name="arrow-back" size={24} color="#16a34a" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Profile</Text>
-        <TouchableOpacity onPress={navigateToEditProfile} style={styles.editButton}>
-          <MaterialCommunityIcons name="pencil" size={22} color="#16a34a" />
-        </TouchableOpacity>
+        <View style={{ width: 32 }} />
       </View>
       
       {isLoading ? (
@@ -132,25 +123,25 @@ const ProfileView: React.FC = () => {
             <View style={styles.metricsGrid}>
               <View style={styles.metricItem}>
                 <MaterialCommunityIcons name="calendar-account" size={24} color="#16a34a" />
-                <Text style={styles.metricValue}>{metrics?.age || '--'}</Text>
+                <Text style={styles.metricValue}>{user?.age || '--'}</Text>
                 <Text style={styles.metricLabel}>Age</Text>
               </View>
               
               <View style={styles.metricItem}>
                 <MaterialCommunityIcons name="human-male-height" size={24} color="#16a34a" />
-                <Text style={styles.metricValue}>{metrics?.height || '--'}</Text>
+                <Text style={styles.metricValue}>{user?.height || '--'}</Text>
                 <Text style={styles.metricLabel}>Height (cm)</Text>
               </View>
               
               <View style={styles.metricItem}>
                 <MaterialCommunityIcons name="weight" size={24} color="#16a34a" />
-                <Text style={styles.metricValue}>{metrics?.weight || '--'}</Text>
+                <Text style={styles.metricValue}>{user?.weight || '--'}</Text>
                 <Text style={styles.metricLabel}>Weight (kg)</Text>
               </View>
               
               <View style={styles.metricItem}>
                 <MaterialCommunityIcons name="chart-bar" size={24} color="#16a34a" />
-                <Text style={styles.metricValue}>{metrics?.bmi || '--'}</Text>
+                <Text style={styles.metricValue}>{calculateBMI()}</Text>
                 <Text style={styles.metricLabel}>BMI</Text>
               </View>
             </View>
@@ -174,13 +165,13 @@ const ProfileView: React.FC = () => {
               
               <View style={styles.statItem}>
                 <MaterialCommunityIcons name="run" size={24} color="#16a34a" />
-                <Text style={styles.statValue}>{mockWorkoutStats.totalWorkouts}</Text>
+                <Text style={styles.statValue}>--</Text>
                 <Text style={styles.statLabel}>Total Workouts</Text>
               </View>
               
               <View style={styles.statItem}>
                 <MaterialCommunityIcons name="timer" size={24} color="#16a34a" />
-                <Text style={styles.statValue}>{mockWorkoutStats.avgDuration}m</Text>
+                <Text style={styles.statValue}>--</Text>
                 <Text style={styles.statLabel}>Avg. Duration</Text>
               </View>
             </View>
@@ -235,9 +226,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#0f172a',
-  },
-  editButton: {
-    padding: 4,
   },
   loadingContainer: {
     flex: 1,

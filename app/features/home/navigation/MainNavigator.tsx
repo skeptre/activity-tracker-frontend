@@ -5,6 +5,10 @@ import CreateActivityView from "../views/CreateActivityView";
 import ActivityTrackerView from "../views/ActivityTrackerView";
 import SettingsView from "../views/SettingsView";
 import ProfileView from "../views/ProfileView";
+import WorkoutsView from "../views/WorkoutsView";
+import WorkoutDetailsView from "../views/WorkoutDetailsView";
+import AddWorkoutView from "../views/AddWorkoutView";
+import EditProfileView from "../views/EditProfileView";
 
 const MainStack = createStackNavigator<MainStackParamList>();
 
@@ -16,6 +20,10 @@ export function MainNavigator() {
             <MainStack.Screen name="ActivityTracker" component={ActivityTrackerView} />
             <MainStack.Screen name="Settings" component={SettingsView} />
             <MainStack.Screen name="Profile" component={ProfileView} />
+            <MainStack.Screen name="Workouts" component={WorkoutsView} />
+            <MainStack.Screen name="WorkoutDetails" component={WorkoutDetailsView} />
+            <MainStack.Screen name="AddWorkout" component={AddWorkoutView} />
+            <MainStack.Screen name="EditProfile" component={EditProfileView} />
         </MainStack.Navigator>
     );
 } 

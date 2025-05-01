@@ -30,7 +30,6 @@ export const homeStyles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#ffffff',
-    marginRight: 32, // To balance the menu icon
   },
   content: {
     flex: 1,
@@ -72,6 +71,32 @@ export const homeStyles = StyleSheet.create({
     color: '#16a34a',
     fontSize: 14,
     textAlign: 'center',
+  },
+  actionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#f0fdf4',
+    borderWidth: 1,
+    borderColor: '#86efac',
+    borderRadius: 8,
+    padding: 16,
+    marginVertical: 16,
+  },
+  actionButtonIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#16a34a',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  actionButtonText: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#16a34a',
   },
   statsContainer: {
     marginVertical: 20,
@@ -164,18 +189,24 @@ export const homeStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
-    marginRight: 15,
+    marginRight: 10,
+  },
+  navWorkoutsItem: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    marginRight: 10,
   },
   navProfileItem: {
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+    marginRight: 10,
   },
   navSettingsItem: {
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
-    marginLeft: 15,
   },
   navHomeButton: {
     width: 48,
@@ -189,6 +220,14 @@ export const homeStyles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 4,
+  },
+  navWorkoutsButton: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#f1f5f9',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   navProfileButton: {
     width: 48,

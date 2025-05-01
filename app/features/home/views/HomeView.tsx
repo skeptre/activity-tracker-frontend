@@ -118,6 +118,10 @@ const HomeView: React.FC<HomeViewProps> = observer(({ navigation }) => {
     navigation.navigate('Profile');
   };
 
+  const navigateToWorkouts = () => {
+    navigation.navigate('Workouts');
+  };
+
   return (
     <SafeAreaView style={homeStyles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#16a34a" />
@@ -211,6 +215,13 @@ const HomeView: React.FC<HomeViewProps> = observer(({ navigation }) => {
               <MaterialCommunityIcons name="home" size={24} color="#ffffff" />
             </View>
             <Text style={[homeStyles.navLabel, homeStyles.activeNavLabel]}>Home</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={homeStyles.navWorkoutsItem} onPress={navigateToWorkouts}>
+            <View style={homeStyles.navWorkoutsButton}>
+              <MaterialCommunityIcons name="dumbbell" size={24} color="#64748b" />
+            </View>
+            <Text style={homeStyles.navLabel}>Workouts</Text>
           </TouchableOpacity>
           
           <TouchableOpacity style={homeStyles.navProfileItem} onPress={navigateToProfile}>

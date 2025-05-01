@@ -55,13 +55,9 @@ const SettingsView: React.FC = () => {
 
   const goBack = () => navigation.goBack();
 
-  // Function to handle Edit Profile (would navigate to an edit form in a real implementation)
+  // Function to handle Edit Profile navigation
   const handleEditProfile = () => {
-    Alert.alert(
-      "Edit Profile",
-      "This would open a profile edit form in a complete implementation.",
-      [{ text: "OK" }]
-    );
+    navigation.navigate('EditProfile');
   };
 
   return (
