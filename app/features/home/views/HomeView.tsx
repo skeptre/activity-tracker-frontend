@@ -222,15 +222,7 @@ const HomeView: React.FC<HomeViewProps> = observer(({ navigation }) => {
       
       {/* Navigation Bar */}
       <View style={homeStyles.navbar}>
-        <TouchableOpacity style={homeStyles.navItem}>
-          <MaterialCommunityIcons name="account-group" size={22} color="#64748b" />
-          <Text style={homeStyles.navLabel}>Friends</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={homeStyles.navItem}>
-          <MaterialCommunityIcons name="chart-bar" size={22} color="#64748b" />
-          <Text style={homeStyles.navLabel}>Stats</Text>
-        </TouchableOpacity>
+        <View style={{ flex: 1 }} />
         
         <TouchableOpacity style={homeStyles.navHomeItem}>
           <View style={homeStyles.navHomeButton}>
@@ -238,15 +230,12 @@ const HomeView: React.FC<HomeViewProps> = observer(({ navigation }) => {
           </View>
         </TouchableOpacity>
         
-        <TouchableOpacity style={homeStyles.navItem}>
-          <MaterialCommunityIcons name="trophy" size={22} color="#64748b" />
-          <Text style={homeStyles.navLabel}>Prizes</Text>
-        </TouchableOpacity>
-        
         <TouchableOpacity style={homeStyles.navItem} onPress={navigateToSettings}>
           <MaterialCommunityIcons name="cog" size={22} color="#64748b" />
           <Text style={homeStyles.navLabel}>Settings</Text>
         </TouchableOpacity>
+        
+        <View style={{ flex: 1 }} />
       </View>
     </SafeAreaView>
   );

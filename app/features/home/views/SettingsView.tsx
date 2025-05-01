@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
-  Switch,
   Alert,
   StatusBar,
 } from 'react-native';
@@ -21,8 +20,6 @@ type SettingsNavigationProp = StackNavigationProp<MainStackParamList, 'Settings'
 
 const SettingsView: React.FC = () => {
   const navigation = useNavigation<SettingsNavigationProp>();
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
@@ -56,9 +53,6 @@ const SettingsView: React.FC = () => {
     );
   };
 
-  const toggleDarkMode = () => setIsDarkMode(previousState => !previousState);
-  const toggleNotifications = () => setNotificationsEnabled(previousState => !previousState);
-
   const goBack = () => navigation.goBack();
 
   return (
@@ -75,74 +69,8 @@ const SettingsView: React.FC = () => {
       </View>
       
       <ScrollView style={styles.content}>
-        {/* Profile Section */}
+        {/* Account Section - Only Log Out */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Profile</Text>
-          <TouchableOpacity style={styles.settingItem}>
-            <MaterialCommunityIcons name="account" size={22} color="#16a34a" />
-            <Text style={styles.settingText}>Edit Profile</Text>
-            <Ionicons name="chevron-forward" size={18} color="#94a3b8" />
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.settingItem}>
-            <MaterialCommunityIcons name="shield-account" size={22} color="#16a34a" />
-            <Text style={styles.settingText}>Privacy</Text>
-            <Ionicons name="chevron-forward" size={18} color="#94a3b8" />
-          </TouchableOpacity>
-        </View>
-        
-        {/* Preferences Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Preferences</Text>
-          
-          <View style={styles.settingItem}>
-            <MaterialCommunityIcons name="theme-light-dark" size={22} color="#16a34a" />
-            <Text style={styles.settingText}>Dark Mode</Text>
-            <Switch
-              trackColor={{ false: "#e2e8f0", true: "#86efac" }}
-              thumbColor={isDarkMode ? "#16a34a" : "#f2f2f2"}
-              onValueChange={toggleDarkMode}
-              value={isDarkMode}
-            />
-          </View>
-          
-          <View style={styles.settingItem}>
-            <MaterialCommunityIcons name="bell" size={22} color="#16a34a" />
-            <Text style={styles.settingText}>Notifications</Text>
-            <Switch
-              trackColor={{ false: "#e2e8f0", true: "#86efac" }}
-              thumbColor={notificationsEnabled ? "#16a34a" : "#f2f2f2"}
-              onValueChange={toggleNotifications}
-              value={notificationsEnabled}
-            />
-          </View>
-          
-          <TouchableOpacity style={styles.settingItem}>
-            <MaterialCommunityIcons name="earth" size={22} color="#16a34a" />
-            <Text style={styles.settingText}>Language</Text>
-            <View style={styles.valueContainer}>
-              <Text style={styles.valueText}>English</Text>
-              <Ionicons name="chevron-forward" size={18} color="#94a3b8" />
-            </View>
-          </TouchableOpacity>
-        </View>
-        
-        {/* Account Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Account</Text>
-          
-          <TouchableOpacity style={styles.settingItem}>
-            <MaterialCommunityIcons name="security" size={22} color="#16a34a" />
-            <Text style={styles.settingText}>Change Password</Text>
-            <Ionicons name="chevron-forward" size={18} color="#94a3b8" />
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.settingItem}>
-            <MaterialCommunityIcons name="backup-restore" size={22} color="#16a34a" />
-            <Text style={styles.settingText}>Backup Data</Text>
-            <Ionicons name="chevron-forward" size={18} color="#94a3b8" />
-          </TouchableOpacity>
-          
           <TouchableOpacity 
             style={[styles.settingItem, styles.logoutItem]} 
             onPress={handleLogout}
@@ -152,23 +80,6 @@ const SettingsView: React.FC = () => {
             <Text style={styles.logoutText}>
               {isLoggingOut ? "Logging out..." : "Log Out"}
             </Text>
-          </TouchableOpacity>
-        </View>
-        
-        {/* About Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>About</Text>
-          
-          <TouchableOpacity style={styles.settingItem}>
-            <MaterialCommunityIcons name="information" size={22} color="#16a34a" />
-            <Text style={styles.settingText}>About Activity Tracker</Text>
-            <Ionicons name="chevron-forward" size={18} color="#94a3b8" />
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.settingItem}>
-            <MaterialCommunityIcons name="help-circle" size={22} color="#16a34a" />
-            <Text style={styles.settingText}>Help & Support</Text>
-            <Ionicons name="chevron-forward" size={18} color="#94a3b8" />
           </TouchableOpacity>
         </View>
         
@@ -206,15 +117,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   section: {
+    marginTop: 20,
     marginBottom: 24,
     paddingHorizontal: 16,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#64748b',
-    marginBottom: 12,
-    marginTop: 8,
   },
   settingItem: {
     flexDirection: 'row',
@@ -222,21 +127,6 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderBottomWidth: 1,
     borderBottomColor: '#f1f5f9',
-  },
-  settingText: {
-    flex: 1,
-    marginLeft: 12,
-    fontSize: 16,
-    color: '#0f172a',
-  },
-  valueContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  valueText: {
-    fontSize: 15,
-    color: '#64748b',
-    marginRight: 4,
   },
   logoutItem: {
     borderBottomWidth: 0,
@@ -250,8 +140,8 @@ const styles = StyleSheet.create({
   },
   versionContainer: {
     alignItems: 'center',
-    paddingVertical: 20,
-    paddingBottom: 40,
+    marginTop: 40,
+    marginBottom: 20,
   },
   versionText: {
     fontSize: 14,
