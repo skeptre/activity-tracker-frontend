@@ -3,4 +3,5 @@ export type MainStackParamList = {
     CreateActivity: undefined;
     ActivityTracker: undefined;
     Settings: undefined;
+    Profile: undefined;
 }; 

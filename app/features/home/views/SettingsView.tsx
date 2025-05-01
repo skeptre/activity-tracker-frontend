@@ -55,6 +55,15 @@ const SettingsView: React.FC = () => {
 
   const goBack = () => navigation.goBack();
 
+  // Function to handle Edit Profile (would navigate to an edit form in a real implementation)
+  const handleEditProfile = () => {
+    Alert.alert(
+      "Edit Profile",
+      "This would open a profile edit form in a complete implementation.",
+      [{ text: "OK" }]
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
@@ -69,6 +78,18 @@ const SettingsView: React.FC = () => {
       </View>
       
       <ScrollView style={styles.content}>
+        {/* Profile Section */}
+        <View style={styles.section}>
+          <TouchableOpacity 
+            style={styles.settingItem} 
+            onPress={handleEditProfile}
+          >
+            <MaterialCommunityIcons name="account-edit" size={22} color="#16a34a" />
+            <Text style={styles.settingText}>Edit Profile</Text>
+            <Ionicons name="chevron-forward" size={18} color="#94a3b8" />
+          </TouchableOpacity>
+        </View>
+        
         {/* Account Section - Only Log Out */}
         <View style={styles.section}>
           <TouchableOpacity 
@@ -127,6 +148,12 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderBottomWidth: 1,
     borderBottomColor: '#f1f5f9',
+  },
+  settingText: {
+    flex: 1,
+    marginLeft: 12,
+    fontSize: 16,
+    color: '#0f172a',
   },
   logoutItem: {
     borderBottomWidth: 0,
