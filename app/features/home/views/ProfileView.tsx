@@ -16,6 +16,7 @@ import { MainStackParamList } from '../types/navigation';
 import { useNavigation } from '@react-navigation/native';
 import { userService, User } from '../../../services/userService';
 import { useStepCounter } from '../../../providers/StepCounterProvider';
+import { useTheme } from '../../../providers/ThemeProvider';
 
 type ProfileNavigationProp = StackNavigationProp<MainStackParamList, 'Profile'>;
 
@@ -24,6 +25,7 @@ const ProfileView: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const { todayData } = useStepCounter();
+  const { theme, isDark } = useTheme();
 
   const loadUserData = async () => {
     setIsLoading(true);
@@ -70,26 +72,26 @@ const ProfileView: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={theme.background} />
       
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: theme.background }]}>
         <TouchableOpacity onPress={goBack} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#16a34a" />
+          <Ionicons name="arrow-back" size={24} color={theme.primary} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Profile</Text>
+        <Text style={[styles.headerTitle, { color: theme.primary }]}>Profile</Text>
         <View style={{ width: 32 }} />
       </View>
       
       {isLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#16a34a" />
+          <ActivityIndicator size="large" color={theme.primary} />
         </View>
       ) : (
-        <ScrollView style={styles.content}>
+        <ScrollView style={[styles.content, { backgroundColor: theme.background }]}>
           {/* Profile Card */}
-          <View style={styles.profileCard}>
+          <View style={[styles.profileCard, { backgroundColor: theme.card }]}>
             <View style={styles.profileHeader}>
               {user?.profileImage ? (
                 <Image 
@@ -98,19 +100,19 @@ const ProfileView: React.FC = () => {
                 />
               ) : (
                 <View style={styles.profileImagePlaceholder}>
-                  <Text style={styles.profileImageText}>
+                  <Text style={[styles.profileImageText, { color: theme.primary }]}>
                     {user?.name?.charAt(0).toUpperCase() || 'U'}
                   </Text>
                 </View>
               )}
               <View style={styles.profileInfo}>
-                <Text style={styles.profileName}>
+                <Text style={[styles.profileName, { color: theme.text }]}>
                   {user?.name || 'User Name'}
                 </Text>
-                <Text style={styles.profileEmail}>
+                <Text style={[styles.profileEmail, { color: theme.secondary }]}>
                   {user?.email || 'user@example.com'}
                 </Text>
-                <Text style={styles.joinedDate}>
+                <Text style={[styles.joinedDate, { color: theme.secondary }]}>
                   Joined {formatDate(user?.createdAt || new Date().toISOString())}
                 </Text>
               </View>
@@ -118,82 +120,82 @@ const ProfileView: React.FC = () => {
           </View>
           
           {/* Metrics Section */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Body Metrics</Text>
+          <View style={[styles.section, { backgroundColor: theme.card }]}>
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>Body Metrics</Text>
             <View style={styles.metricsGrid}>
               <View style={styles.metricItem}>
-                <MaterialCommunityIcons name="calendar-account" size={24} color="#16a34a" />
-                <Text style={styles.metricValue}>{user?.age || '--'}</Text>
-                <Text style={styles.metricLabel}>Age</Text>
+                <MaterialCommunityIcons name="calendar-account" size={24} color={theme.primary} />
+                <Text style={[styles.metricValue, { color: theme.text }]}>{user?.age || '--'}</Text>
+                <Text style={[styles.metricLabel, { color: theme.secondary }]}>Age</Text>
               </View>
               
               <View style={styles.metricItem}>
-                <MaterialCommunityIcons name="human-male-height" size={24} color="#16a34a" />
-                <Text style={styles.metricValue}>{user?.height || '--'}</Text>
-                <Text style={styles.metricLabel}>Height (cm)</Text>
+                <MaterialCommunityIcons name="human-male-height" size={24} color={theme.primary} />
+                <Text style={[styles.metricValue, { color: theme.text }]}>{user?.height || '--'}</Text>
+                <Text style={[styles.metricLabel, { color: theme.secondary }]}>Height (cm)</Text>
               </View>
               
               <View style={styles.metricItem}>
-                <MaterialCommunityIcons name="weight" size={24} color="#16a34a" />
-                <Text style={styles.metricValue}>{user?.weight || '--'}</Text>
-                <Text style={styles.metricLabel}>Weight (kg)</Text>
+                <MaterialCommunityIcons name="weight" size={24} color={theme.primary} />
+                <Text style={[styles.metricValue, { color: theme.text }]}>{user?.weight || '--'}</Text>
+                <Text style={[styles.metricLabel, { color: theme.secondary }]}>Weight (kg)</Text>
               </View>
               
               <View style={styles.metricItem}>
-                <MaterialCommunityIcons name="chart-bar" size={24} color="#16a34a" />
-                <Text style={styles.metricValue}>{calculateBMI()}</Text>
-                <Text style={styles.metricLabel}>BMI</Text>
+                <MaterialCommunityIcons name="chart-bar" size={24} color={theme.primary} />
+                <Text style={[styles.metricValue, { color: theme.text }]}>{calculateBMI()}</Text>
+                <Text style={[styles.metricLabel, { color: theme.secondary }]}>BMI</Text>
               </View>
             </View>
           </View>
           
           {/* Activity Stats */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Activity Statistics</Text>
+          <View style={[styles.section, { backgroundColor: theme.card }]}>
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>Activity Statistics</Text>
             <View style={styles.statsGrid}>
               <View style={styles.statItem}>
-                <MaterialCommunityIcons name="shoe-print" size={24} color="#16a34a" />
-                <Text style={styles.statValue}>{todayData.steps}</Text>
-                <Text style={styles.statLabel}>Current Steps</Text>
+                <MaterialCommunityIcons name="shoe-print" size={24} color={theme.primary} />
+                <Text style={[styles.statValue, { color: theme.text }]}>{todayData.steps}</Text>
+                <Text style={[styles.statLabel, { color: theme.secondary }]}>Current Steps</Text>
               </View>
               
               <View style={styles.statItem}>
-                <MaterialCommunityIcons name="fire" size={24} color="#16a34a" />
-                <Text style={styles.statValue}>{todayData.calories}</Text>
-                <Text style={styles.statLabel}>Calories Today</Text>
+                <MaterialCommunityIcons name="fire" size={24} color={theme.primary} />
+                <Text style={[styles.statValue, { color: theme.text }]}>{todayData.calories}</Text>
+                <Text style={[styles.statLabel, { color: theme.secondary }]}>Calories Today</Text>
               </View>
               
               <View style={styles.statItem}>
-                <MaterialCommunityIcons name="run" size={24} color="#16a34a" />
-                <Text style={styles.statValue}>--</Text>
-                <Text style={styles.statLabel}>Total Workouts</Text>
+                <MaterialCommunityIcons name="run" size={24} color={theme.primary} />
+                <Text style={[styles.statValue, { color: theme.text }]}>--</Text>
+                <Text style={[styles.statLabel, { color: theme.secondary }]}>Total Workouts</Text>
               </View>
               
               <View style={styles.statItem}>
-                <MaterialCommunityIcons name="timer" size={24} color="#16a34a" />
-                <Text style={styles.statValue}>--</Text>
-                <Text style={styles.statLabel}>Avg. Duration</Text>
+                <MaterialCommunityIcons name="timer" size={24} color={theme.primary} />
+                <Text style={[styles.statValue, { color: theme.text }]}>--</Text>
+                <Text style={[styles.statLabel, { color: theme.secondary }]}>Avg. Duration</Text>
               </View>
             </View>
           </View>
           
           {/* Goals Section */}
-          <View style={[styles.section, styles.lastSection]}>
-            <Text style={styles.sectionTitle}>Daily Goals</Text>
+          <View style={[styles.section, styles.lastSection, { backgroundColor: theme.card }]}>
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>Daily Goals</Text>
             <View style={styles.goalBar}>
-              <View style={styles.goalProgress}>
+              <View style={[styles.goalProgress, { backgroundColor: theme.border }]}>
                 <View 
                   style={[
                     styles.goalProgressFill,
-                    { width: `${Math.min((todayData.steps / 10000) * 100, 100)}%` }
+                    { backgroundColor: theme.primary, width: `${Math.min((todayData.steps / 10000) * 100, 100)}%` }
                   ]}
                 />
               </View>
               <View style={styles.goalDetails}>
-                <Text style={styles.goalText}>
+                <Text style={[styles.goalText, { color: theme.secondary }]}>
                   Step Goal: {todayData.steps} / 10,000
                 </Text>
-                <Text style={styles.goalPercentage}>
+                <Text style={[styles.goalPercentage, { color: theme.primary }]}>
                   {Math.round((todayData.steps / 10000) * 100)}%
                 </Text>
               </View>
@@ -208,7 +210,6 @@ const ProfileView: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
   },
   header: {
     flexDirection: 'row',
@@ -225,7 +226,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#0f172a',
   },
   loadingContainer: {
     flex: 1,
@@ -269,7 +269,6 @@ const styles = StyleSheet.create({
   profileImageText: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#64748b',
   },
   profileInfo: {
     flex: 1,
@@ -277,17 +276,14 @@ const styles = StyleSheet.create({
   profileName: {
     fontSize: 20,
     fontWeight: '600',
-    color: '#0f172a',
     marginBottom: 4,
   },
   profileEmail: {
     fontSize: 14,
-    color: '#64748b',
     marginBottom: 4,
   },
   joinedDate: {
     fontSize: 12,
-    color: '#94a3b8',
   },
   section: {
     backgroundColor: '#fff',
@@ -306,7 +302,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#0f172a',
     marginBottom: 16,
   },
   metricsGrid: {
@@ -325,13 +320,11 @@ const styles = StyleSheet.create({
   metricValue: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#0f172a',
     marginTop: 8,
     marginBottom: 4,
   },
   metricLabel: {
     fontSize: 12,
-    color: '#64748b',
   },
   statsGrid: {
     flexDirection: 'row',
@@ -349,13 +342,11 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#0f172a',
     marginTop: 8,
     marginBottom: 4,
   },
   statLabel: {
     fontSize: 12,
-    color: '#64748b',
   },
   goalBar: {
     marginTop: 8,
@@ -379,12 +370,10 @@ const styles = StyleSheet.create({
   },
   goalText: {
     fontSize: 14,
-    color: '#64748b',
   },
   goalPercentage: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#16a34a',
   },
 });
 

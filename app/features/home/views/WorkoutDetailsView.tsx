@@ -16,6 +16,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { MainStackParamList } from '../types/navigation';
 import { useNavigation, RouteProp } from '@react-navigation/native';
 import { workoutService, Workout } from '../../../services/workoutService';
+import { useTheme } from '../../../providers/ThemeProvider';
 
 type WorkoutDetailsNavigationProp = StackNavigationProp<MainStackParamList, 'WorkoutDetails'>;
 type WorkoutDetailsRouteProp = RouteProp<MainStackParamList, 'WorkoutDetails'>;
@@ -54,6 +55,8 @@ const WorkoutDetailsView: React.FC<WorkoutDetailsProps> = ({ route }) => {
   // Editable fields
   const [editDuration, setEditDuration] = useState('');
   const [editCalories, setEditCalories] = useState('');
+  
+  const { theme, isDark } = useTheme();
   
   // Load workout details
   useEffect(() => {
@@ -215,17 +218,17 @@ const WorkoutDetailsView: React.FC<WorkoutDetailsProps> = ({ route }) => {
   
   if (isLoading) {
     return (
-      <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="light-content" backgroundColor="#16a34a" />
-        <View style={styles.header}>
+      <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+        <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={theme.primary} />
+        <View style={[styles.header, { backgroundColor: theme.primary }]}>
           <TouchableOpacity onPress={goBack} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color="#ffffff" />
+            <Ionicons name="arrow-back" size={24} color={theme.background} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Workout Details</Text>
+          <Text style={[styles.headerTitle, { color: theme.background }]}>Workout Details</Text>
           <View style={{ width: 40 }} />
         </View>
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#16a34a" />
+          <ActivityIndicator size="large" color={theme.primary} />
         </View>
       </SafeAreaView>
     );
@@ -233,17 +236,17 @@ const WorkoutDetailsView: React.FC<WorkoutDetailsProps> = ({ route }) => {
   
   if (!workout) {
     return (
-      <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="light-content" backgroundColor="#16a34a" />
-        <View style={styles.header}>
+      <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+        <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={theme.primary} />
+        <View style={[styles.header, { backgroundColor: theme.primary }]}>
           <TouchableOpacity onPress={goBack} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color="#ffffff" />
+            <Ionicons name="arrow-back" size={24} color={theme.background} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Workout Details</Text>
+          <Text style={[styles.headerTitle, { color: theme.background }]}>Workout Details</Text>
           <View style={{ width: 40 }} />
         </View>
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>Workout not found</Text>
+          <Text style={[styles.emptyText, { color: theme.secondary }]}>Workout not found</Text>
         </View>
       </SafeAreaView>
     );
@@ -252,72 +255,74 @@ const WorkoutDetailsView: React.FC<WorkoutDetailsProps> = ({ route }) => {
   const { icon, color } = getWorkoutTypeInfo(workout.type);
   
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#16a34a" />
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={theme.primary} />
       
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: theme.primary }]}>
         <TouchableOpacity onPress={goBack} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#ffffff" />
+          <Ionicons name="arrow-back" size={24} color={theme.background} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Workout Details</Text>
+        <Text style={[styles.headerTitle, { color: theme.background }]}>Workout Details</Text>
         <TouchableOpacity onPress={toggleEditMode} style={styles.editButton} disabled={isDeleting}>
-          <Ionicons name={isEditing ? "save-outline" : "pencil"} size={24} color="#ffffff" />
+          <Ionicons name={isEditing ? "save-outline" : "pencil"} size={24} color={theme.background} />
         </TouchableOpacity>
       </View>
       
       <ScrollView style={styles.content}>
         {/* Workout Type */}
-        <View style={styles.workoutHeader}>
+        <View style={[styles.workoutHeader, { backgroundColor: theme.card }]}>
           <View style={[styles.workoutIconLarge, { backgroundColor: color }]}>
             <MaterialCommunityIcons name={icon} size={36} color="#ffffff" />
           </View>
           <View style={styles.workoutHeaderInfo}>
-            <Text style={styles.workoutType}>{workout.type}</Text>
-            <Text style={styles.workoutDate}>{formatDate(workout.workout_date)}</Text>
-            <Text style={styles.workoutTime}>{formatTime(workout.workout_date)}</Text>
+            <Text style={[styles.workoutType, { color: theme.text }]}>{workout.type}</Text>
+            <Text style={[styles.workoutDate, { color: theme.secondary }]}>{formatDate(workout.workout_date)}</Text>
+            <Text style={[styles.workoutTime, { color: theme.secondary }]}>{formatTime(workout.workout_date)}</Text>
           </View>
         </View>
         
         {/* Workout Details */}
         <View style={styles.detailsContainer}>
-          <View style={styles.detailRow}>
+          <View style={[styles.detailRow, { backgroundColor: theme.card, shadowColor: theme.border }]}>
             <View style={styles.detailItem}>
-              <MaterialCommunityIcons name="clock-outline" size={24} color="#16a34a" />
-              <Text style={styles.detailLabel}>Duration</Text>
+              <MaterialCommunityIcons name="clock-outline" size={24} color={theme.primary} />
+              <Text style={[styles.detailLabel, { color: theme.secondary }]}>Duration</Text>
               {isEditing ? (
                 <TextInput
-                  style={styles.editInput}
+                  style={[styles.editInput, { color: theme.text, borderColor: theme.border, backgroundColor: theme.background }]}
                   value={editDuration}
                   onChangeText={setEditDuration}
                   keyboardType="numeric"
                   placeholder="Duration (minutes)"
+                  placeholderTextColor={theme.secondary}
                 />
               ) : (
-                <Text style={styles.detailValue}>{workout.duration} minutes</Text>
+                <Text style={[styles.detailValue, { color: theme.text }]}>{workout.duration} minutes</Text>
               )}
             </View>
           </View>
           
-          <View style={styles.detailRow}>
+          <View style={[styles.detailRow, { backgroundColor: theme.card, shadowColor: theme.border }]}>
             <View style={styles.detailItem}>
-              <MaterialCommunityIcons name="fire" size={24} color="#16a34a" />
-              <Text style={styles.detailLabel}>Calories Burned</Text>
+              <MaterialCommunityIcons name="fire" size={24} color={theme.primary} />
+              <Text style={[styles.detailLabel, { color: theme.secondary }]}>Calories Burned</Text>
               {isEditing ? (
                 <TextInput
-                  style={styles.editInput}
+                  style={[styles.editInput, { color: theme.text, borderColor: theme.border, backgroundColor: theme.background }]}
                   value={editCalories}
                   onChangeText={setEditCalories}
                   keyboardType="numeric"
                   placeholder="Calories"
+                  placeholderTextColor={theme.secondary}
                 />
               ) : (
-                <Text style={styles.detailValue}>{workout.calories_burned} calories</Text>
+                <Text style={[styles.detailValue, { color: theme.text }]}>{workout.calories_burned} calories</Text>
               )}
             </View>
           </View>
           
-          <View style={styles.detailRow}>
+          <View style={[styles.detailRow, { backgroundColor: theme.card, shadowColor: theme.border }]}>
             <View style={styles.detailItem}>
               <MaterialCommunityIcons 
                 name={
@@ -328,10 +333,10 @@ const WorkoutDetailsView: React.FC<WorkoutDetailsProps> = ({ route }) => {
                       : "signal-cellular-3"
                 } 
                 size={24} 
-                color="#16a34a" 
+                color={theme.primary} 
               />
-              <Text style={styles.detailLabel}>Intensity</Text>
-              <Text style={styles.detailValue}>
+              <Text style={[styles.detailLabel, { color: theme.secondary }]}>Intensity</Text>
+              <Text style={[styles.detailValue, { color: theme.text }]}>
                 {workout.intensity === 0 ? 'Light' : 
                  workout.intensity === 1 ? 'Moderate' : 
                  workout.intensity === 2 ? 'High' : 'Very High'}
@@ -343,31 +348,31 @@ const WorkoutDetailsView: React.FC<WorkoutDetailsProps> = ({ route }) => {
         {isEditing ? (
           <View style={styles.actionButtons}>
             <TouchableOpacity 
-              style={styles.saveButton}
+              style={[styles.saveButton, { backgroundColor: theme.primary }]}
               onPress={saveWorkout}
             >
-              <Text style={styles.buttonText}>Save Changes</Text>
+              <Text style={[styles.buttonText, { color: theme.background }]}>Save Changes</Text>
             </TouchableOpacity>
             
             <TouchableOpacity 
-              style={styles.cancelButton}
+              style={[styles.cancelButton, { backgroundColor: theme.card }]}
               onPress={toggleEditMode}
             >
-              <Text style={styles.cancelButtonText}>Cancel</Text>
+              <Text style={[styles.cancelButtonText, { color: theme.secondary }]}>Cancel</Text>
             </TouchableOpacity>
           </View>
         ) : (
           <TouchableOpacity 
-            style={styles.deleteButton}
+            style={[styles.deleteButton, { backgroundColor: '#ef4444' }]}
             onPress={handleDeleteWorkout}
             disabled={isDeleting}
           >
             {isDeleting ? (
-              <ActivityIndicator size="small" color="#ffffff" />
+              <ActivityIndicator size="small" color={theme.background} />
             ) : (
               <>
-                <MaterialCommunityIcons name="delete" size={20} color="#ffffff" />
-                <Text style={styles.buttonText}>Delete Workout</Text>
+                <MaterialCommunityIcons name="delete" size={20} color={theme.background} />
+                <Text style={[styles.buttonText, { color: theme.background }]}>Delete Workout</Text>
               </>
             )}
           </TouchableOpacity>

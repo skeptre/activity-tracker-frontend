@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useTheme } from '../../../providers/ThemeProvider';
 
 interface RankingItemProps {
   name: string;
@@ -15,6 +16,7 @@ const RankingItem: React.FC<RankingItemProps> = ({
   imageUrl, 
   steps = 0 
 }) => {
+  const { theme } = useTheme();
   // Define medal colors and icons based on position
   const getMedalIcon = () => {
     switch (position) {
@@ -48,10 +50,10 @@ const RankingItem: React.FC<RankingItemProps> = ({
           </View>
         )}
         <View style={styles.userInfo}>
-          <Text style={styles.rankingName}>{name}</Text>
+          <Text style={[styles.rankingName, { color: theme.text }]}>{name}</Text>
           <View style={styles.stepsContainer}>
-            <MaterialCommunityIcons name="shoe-print" size={14} color="#16a34a" style={styles.footprintIcon} />
-            <Text style={styles.stepsText}>{formattedSteps} steps</Text>
+            <MaterialCommunityIcons name="shoe-print" size={14} color={theme.primary} style={styles.footprintIcon} />
+            <Text style={[styles.stepsText, { color: theme.secondary }]}>{formattedSteps} steps</Text>
           </View>
         </View>
       </View>

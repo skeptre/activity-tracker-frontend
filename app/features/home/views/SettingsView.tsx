@@ -8,6 +8,7 @@ import {
   ScrollView,
   Alert,
   StatusBar,
+  Switch,
 } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -15,12 +16,14 @@ import { MainStackParamList } from '../types/navigation';
 import { useNavigation } from '@react-navigation/native';
 import { authService } from '../../../features/auth/services/authService';
 import { authViewModel } from '../../../features/auth/viewModels/AuthViewModel';
+import { useTheme } from '../../../providers/ThemeProvider';
 
 type SettingsNavigationProp = StackNavigationProp<MainStackParamList, 'Settings'>;
 
 const SettingsView: React.FC = () => {
   const navigation = useNavigation<SettingsNavigationProp>();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const { theme, toggleTheme, isDark } = useTheme();
 
   const handleLogout = async () => {
     Alert.alert(
@@ -61,27 +64,35 @@ const SettingsView: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={theme.background} />
       
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={goBack} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#16a34a" />
+          <Ionicons name="arrow-back" size={24} color={theme.primary} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Settings</Text>
+        <Text style={[styles.headerTitle, { color: theme.primary }]}>Settings</Text>
         <View style={{ width: 24 }} />
       </View>
       
       <ScrollView style={styles.content}>
+        {/* Dark Mode Toggle Section */}
+        <View style={styles.section}>
+          <View style={styles.settingItem}>
+            <MaterialCommunityIcons name="theme-light-dark" size={22} color={theme.primary} />
+            <Text style={[styles.settingText, { color: theme.text }]}>Dark Mode</Text>
+            <Switch value={isDark} onValueChange={toggleTheme} />
+          </View>
+        </View>
         {/* Profile Section */}
         <View style={styles.section}>
           <TouchableOpacity 
             style={styles.settingItem} 
             onPress={handleEditProfile}
           >
-            <MaterialCommunityIcons name="account-edit" size={22} color="#16a34a" />
-            <Text style={styles.settingText}>Edit Profile</Text>
+            <MaterialCommunityIcons name="account-edit" size={22} color={theme.primary} />
+            <Text style={[styles.settingText, { color: theme.text }]}>Edit Profile</Text>
             <Ionicons name="chevron-forward" size={18} color="#94a3b8" />
           </TouchableOpacity>
         </View>

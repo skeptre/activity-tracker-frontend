@@ -18,6 +18,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { MainStackParamList } from '../types/navigation';
 import { useNavigation } from '@react-navigation/native';
 import { workoutService, Workout } from '../../../services/workoutService';
+import { useTheme } from '../../../providers/ThemeProvider';
 
 type AddWorkoutNavigationProp = StackNavigationProp<MainStackParamList, 'AddWorkout'>;
 
@@ -60,6 +61,8 @@ const AddWorkoutView: React.FC = () => {
     duration: '',
     caloriesBurned: '',
   });
+
+  const { theme, isDark } = useTheme();
 
   // Navigate back
   const goBack = () => navigation.goBack();
@@ -156,50 +159,51 @@ const AddWorkoutView: React.FC = () => {
   // Render workout type item
   const renderWorkoutTypeItem = ({ item: [type, { icon, color }] }: { item: [string, { icon: WorkoutIcon, color: string }] }) => (
     <TouchableOpacity
-      style={styles.workoutTypeItem}
+      style={[styles.workoutTypeItem, { backgroundColor: theme.card, borderColor: theme.border, borderWidth: 1 }]}
       onPress={() => {
         setWorkoutType(type);
         setShowTypeSelector(false);
       }}
     >
-      <View style={[styles.workoutTypeIcon, { backgroundColor: color }]}>
+      <View style={[styles.workoutTypeIcon, { backgroundColor: color }]}> 
         <MaterialCommunityIcons name={icon} size={24} color="#ffffff" />
       </View>
       <Text style={[
         styles.workoutTypeText,
-        workoutType === type && styles.workoutTypeTextSelected
+        { color: theme.text },
+        workoutType === type && { color: theme.primary, fontWeight: '600' }
       ]}>
         {type}
       </Text>
       {workoutType === type && (
-        <MaterialCommunityIcons name="check" size={24} color="#16a34a" />
+        <MaterialCommunityIcons name="check" size={24} color={theme.primary} />
       )}
     </TouchableOpacity>
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#16a34a" />
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={theme.primary} />
       
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: theme.primary }]}>
         <TouchableOpacity onPress={goBack} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#ffffff" />
+          <Ionicons name="arrow-back" size={24} color={theme.background} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Add Workout</Text>
+        <Text style={[styles.headerTitle, { color: theme.background }]}>Add Workout</Text>
         <View style={{ width: 40 }} />
       </View>
       
       {isLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#16a34a" />
+          <ActivityIndicator size="large" color={theme.primary} />
         </View>
       ) : (
         <ScrollView style={styles.content}>
-          <View style={styles.formContainer}>
+          <View style={[styles.formContainer, { backgroundColor: theme.card }]}>
             {/* Workout Type */}
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Workout Type</Text>
+              <Text style={[styles.label, { color: theme.text }]}>Workout Type</Text>
               <TouchableOpacity
                 style={styles.workoutTypeSelector}
                 onPress={() => setShowTypeSelector(true)}
@@ -211,57 +215,60 @@ const AddWorkoutView: React.FC = () => {
                     color="#ffffff"
                   />
                 </View>
-                <Text style={styles.workoutTypeSelectorText}>{workoutType}</Text>
-                <MaterialCommunityIcons name="chevron-down" size={24} color="#64748b" />
+                <Text style={[styles.workoutTypeSelectorText, { color: theme.text }]}>{workoutType}</Text>
+                <MaterialCommunityIcons name="chevron-down" size={24} color={theme.secondary} />
               </TouchableOpacity>
             </View>
             
             {/* Duration */}
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Duration (minutes)</Text>
+              <Text style={[styles.label, { color: theme.text }]}>Duration (minutes)</Text>
               <TextInput
-                style={[styles.input, errors.duration ? styles.inputError : null]}
+                style={[styles.input, errors.duration ? styles.inputError : null, { color: theme.text, borderColor: theme.border, backgroundColor: theme.background }]}
                 value={duration}
                 onChangeText={handleDurationChange}
                 placeholder="Enter duration in minutes"
+                placeholderTextColor={theme.secondary}
                 keyboardType="numeric"
               />
               {errors.duration ? (
-                <Text style={styles.errorText}>{errors.duration}</Text>
+                <Text style={[styles.errorText, { color: theme.primary }]}>{errors.duration}</Text>
               ) : null}
             </View>
             
             {/* Calories Burned */}
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Calories Burned</Text>
+              <Text style={[styles.label, { color: theme.text }]}>Calories Burned</Text>
               <TextInput
-                style={[styles.input, errors.caloriesBurned ? styles.inputError : null]}
+                style={[styles.input, errors.caloriesBurned ? styles.inputError : null, { color: theme.text, borderColor: theme.border, backgroundColor: theme.background }]}
                 value={caloriesBurned}
                 onChangeText={handleCaloriesChange}
                 placeholder="Enter calories burned"
+                placeholderTextColor={theme.secondary}
                 keyboardType="numeric"
               />
               {errors.caloriesBurned ? (
-                <Text style={styles.errorText}>{errors.caloriesBurned}</Text>
+                <Text style={[styles.errorText, { color: theme.primary }]}>{errors.caloriesBurned}</Text>
               ) : null}
             </View>
             
             {/* Intensity */}
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Intensity</Text>
-              <View style={styles.intensityContainer}>
+              <Text style={[styles.label, { color: theme.text }]}>Intensity</Text>
+              <View style={[styles.intensityContainer, { backgroundColor: theme.background }]}>
                 {INTENSITY_LEVELS.map((level) => (
                   <TouchableOpacity
                     key={level.value}
                     style={[
                       styles.intensityOption,
-                      intensity === level.value && styles.intensitySelected,
+                      { backgroundColor: intensity === level.value ? theme.primary : theme.card, borderColor: theme.border, borderWidth: 1 },
                     ]}
                     onPress={() => setIntensity(level.value)}
                   >
                     <Text 
                       style={[
                         styles.intensityText,
+                        { color: intensity === level.value ? theme.background : theme.text },
                         intensity === level.value && styles.intensityTextSelected,
                       ]}
                     >
@@ -274,10 +281,10 @@ const AddWorkoutView: React.FC = () => {
             
             {/* Save Button */}
             <TouchableOpacity 
-              style={styles.saveButton}
+              style={[styles.saveButton, { backgroundColor: theme.primary }]}
               onPress={handleSaveWorkout}
             >
-              <Text style={styles.saveButtonText}>Save Workout</Text>
+              <Text style={[styles.saveButtonText, { color: theme.background }]}>Save Workout</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -317,13 +324,11 @@ const AddWorkoutView: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#16a34a',
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
@@ -334,7 +339,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#ffffff',
   },
   loadingContainer: {
     flex: 1,
@@ -353,8 +357,6 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: '500',
-    color: '#1f2937',
-    marginBottom: 8,
   },
   input: {
     borderWidth: 1,
@@ -363,7 +365,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: 16,
-    color: '#1f2937',
   },
   inputError: {
     borderColor: '#ef4444',
@@ -393,7 +394,6 @@ const styles = StyleSheet.create({
   workoutTypeSelectorText: {
     flex: 1,
     fontSize: 16,
-    color: '#1f2937',
   },
   modalOverlay: {
     flex: 1,
@@ -417,7 +417,6 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#1f2937',
   },
   modalCloseButton: {
     padding: 4,
@@ -437,8 +436,6 @@ const styles = StyleSheet.create({
   workoutTypeText: {
     flex: 1,
     fontSize: 16,
-    color: '#1f2937',
-    marginLeft: 12,
   },
   workoutTypeTextSelected: {
     fontWeight: '600',
@@ -463,7 +460,6 @@ const styles = StyleSheet.create({
   },
   intensityText: {
     fontSize: 14,
-    color: '#64748b',
   },
   intensityTextSelected: {
     color: '#ffffff',

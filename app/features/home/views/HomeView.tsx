@@ -20,6 +20,7 @@ import homeStyles from '../styles/homeStyles';
 import { useStepCounter } from '../../../providers/StepCounterProvider';
 import { userService, User, UserRanking } from '../../../services/userService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTheme } from '../../../providers/ThemeProvider';
 
 type HomeViewNavigationProp = StackNavigationProp<MainStackParamList, 'Home'>;
 
@@ -40,6 +41,8 @@ const HomeView: React.FC<HomeViewProps> = observer(({ navigation }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [userRankings, setUserRankings] = useState<UserRanking[]>([]);
   const [isUserLoading, setIsUserLoading] = useState<boolean>(true);
+
+  const { theme, isDark } = useTheme();
 
   // Initial setup - load user data, generate mock data if needed
   useEffect(() => {
@@ -127,70 +130,69 @@ const HomeView: React.FC<HomeViewProps> = observer(({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={homeStyles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#16a34a" />
-      
-      {/* Header */}
-      <View style={homeStyles.header}>
-        <Text style={homeStyles.headerTitle}>Activity Tracker</Text>
+    <SafeAreaView style={[homeStyles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={theme.primary} />
+      {/* Modern Header: Profile (left), Title (center), Settings (right) */}
+      <View style={[homeStyles.header, { backgroundColor: theme.primary }]}> 
+        {/* Profile Button */}
+        <TouchableOpacity onPress={navigateToProfile} style={homeStyles.headerProfileButton}>
+          {currentUser?.profileImage ? (
+            <Image 
+              source={{ uri: currentUser.profileImage }} 
+              style={[homeStyles.headerProfileAvatar, { borderColor: theme.background }]} 
+            />
+          ) : (
+            <View style={[homeStyles.headerProfileAvatar, homeStyles.defaultAvatar, { backgroundColor: theme.card }]}> 
+              <MaterialCommunityIcons name="account" size={24} color={theme.primary} />
+            </View>
+          )}
+        </TouchableOpacity>
+        {/* Title */}
+        <Text style={[homeStyles.headerTitle, { color: theme.background }]}>Activity Tracker</Text>
+        {/* Settings Button */}
+        <TouchableOpacity onPress={navigateToSettings} style={homeStyles.headerSettingsButton}>
+          <MaterialCommunityIcons name="cog" size={28} color={theme.background} />
+        </TouchableOpacity>
       </View>
-      
       {/* Main Content */}
       <ScrollView 
-        style={homeStyles.content} 
+        style={[homeStyles.content, { backgroundColor: theme.card }]} 
         contentContainerStyle={{ paddingBottom: 120 }}
         showsVerticalScrollIndicator={true}
         refreshControl={
           <RefreshControl
             refreshing={isStepsLoading || isUserLoading}
             onRefresh={handleRefresh}
-            colors={["#16a34a"]}
-            tintColor="#16a34a"
+            colors={[theme.primary]}
+            tintColor={theme.primary}
           />
         }
       >
-        {/* Profile Avatar */}
-        <View style={homeStyles.profileSection}>
-          {currentUser?.profileImage ? (
-            <Image 
-              source={{ uri: currentUser.profileImage }} 
-              style={homeStyles.profileAvatar} 
-            />
-          ) : (
-            <View style={[homeStyles.profileAvatar, homeStyles.defaultAvatar]}>
-              <Text style={homeStyles.avatarText}>
-                {currentUser?.name?.charAt(0).toUpperCase() || 'U'}
-              </Text>
-            </View>
-          )}
+        {/* Step Circle Component with real data, now in a card */}
+        <View style={[homeStyles.stepCard, { backgroundColor: theme.background, shadowColor: theme.border }]}> 
+          <StepCircle 
+            stepData={todayData}
+            isLoading={isStepsLoading}
+            goal={10000}
+          />
         </View>
-        
-        {/* Step Circle Component with real data */}
-        <StepCircle 
-          stepData={todayData}
-          isLoading={isStepsLoading}
-          goal={10000}
-        />
-
         {!isPedometerAvailable && (
           <TouchableOpacity 
-            style={homeStyles.mockDataButton}
+            style={[homeStyles.mockDataButton, { backgroundColor: theme.card, borderColor: theme.primary }]}
             onPress={generateMockData}
           >
-            <Text style={homeStyles.mockDataText}>
+            <Text style={[homeStyles.mockDataText, { color: theme.primary }]}> 
               Pedometer not available. Tap to generate mock data.
             </Text>
           </TouchableOpacity>
         )}
-        
         {/* Rankings Section - Removed Awards */}
-        <View style={homeStyles.statsContainer}>
+        <View style={[homeStyles.statsContainer, { backgroundColor: theme.background, shadowColor: theme.border }]}> 
           <View style={homeStyles.rankingSection}>
-            <Text style={homeStyles.sectionTitle}>Today's Ranking:</Text>
-            
+            <Text style={[homeStyles.sectionTitle, { color: theme.text }]}>Today's Ranking:</Text>
             {isUserLoading ? (
               <View style={homeStyles.loadingContainer}>
-                <ActivityIndicator color="#16a34a" />
+                <ActivityIndicator color={theme.primary} />
               </View>
             ) : userRankings.length > 0 ? (
               userRankings.map(user => (
@@ -203,46 +205,28 @@ const HomeView: React.FC<HomeViewProps> = observer(({ navigation }) => {
                 />
               ))
             ) : (
-              <Text style={homeStyles.emptyText}>No rankings available</Text>
+              <Text style={[homeStyles.emptyText, { color: theme.secondary }]}>No rankings available</Text>
             )}
           </View>
         </View>
       </ScrollView>
-      
       {/* Navigation Bar */}
-      <View style={homeStyles.navbar}>
+      <View style={[homeStyles.navbar, { backgroundColor: theme.nav, borderTopColor: theme.border }]}> 
         <View style={{ flex: 1 }} />
-        
-        <View style={homeStyles.navButtonsContainer}>
+        <View style={[homeStyles.navButtonsContainer, { width: '60%', justifyContent: 'space-between' }]}> 
           <TouchableOpacity style={homeStyles.navHomeItem}>
-            <View style={homeStyles.navHomeButton}>
-              <MaterialCommunityIcons name="home" size={24} color="#ffffff" />
+            <View style={[homeStyles.navHomeButton, { backgroundColor: theme.navActive, shadowColor: theme.primary }]}> 
+              <MaterialCommunityIcons name="home" size={24} color={theme.background} />
             </View>
-            <Text style={[homeStyles.navLabel, homeStyles.activeNavLabel]}>Home</Text>
+            <Text style={[homeStyles.navLabel, homeStyles.activeNavLabel, { color: theme.navActive }]}>Home</Text>
           </TouchableOpacity>
-          
           <TouchableOpacity style={homeStyles.navWorkoutsItem} onPress={navigateToWorkouts}>
-            <View style={homeStyles.navWorkoutsButton}>
-              <MaterialCommunityIcons name="dumbbell" size={24} color="#64748b" />
+            <View style={[homeStyles.navWorkoutsButton, { backgroundColor: theme.nav }]}> 
+              <MaterialCommunityIcons name="dumbbell" size={24} color={theme.navInactive} />
             </View>
-            <Text style={homeStyles.navLabel}>Workouts</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={homeStyles.navProfileItem} onPress={navigateToProfile}>
-            <View style={homeStyles.navProfileButton}>
-              <MaterialCommunityIcons name="account" size={24} color="#64748b" />
-            </View>
-            <Text style={homeStyles.navLabel}>Profile</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={homeStyles.navSettingsItem} onPress={navigateToSettings}>
-            <View style={homeStyles.navSettingsButton}>
-              <MaterialCommunityIcons name="cog" size={24} color="#64748b" />
-            </View>
-            <Text style={homeStyles.navLabel}>Settings</Text>
+            <Text style={[homeStyles.navLabel, { color: theme.navInactive }]}>Workouts</Text>
           </TouchableOpacity>
         </View>
-        
         <View style={{ flex: 1 }} />
       </View>
     </SafeAreaView>

@@ -15,6 +15,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { MainStackParamList } from '../types/navigation';
 import { useNavigation } from '@react-navigation/native';
 import { workoutService, Workout } from '../../../services/workoutService';
+import { useTheme } from '../../../providers/ThemeProvider';
 
 type WorkoutsNavigationProp = StackNavigationProp<MainStackParamList, 'Workouts'>;
 
@@ -41,6 +42,7 @@ const WorkoutsView: React.FC = () => {
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const { theme, isDark } = useTheme();
 
   // Load workouts on mount or when date changes
   useEffect(() => {
@@ -236,28 +238,28 @@ const WorkoutsView: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#16a34a" />
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={theme.primary} />
       
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: theme.primary }]}>
         <TouchableOpacity onPress={goBack} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#ffffff" />
+          <Ionicons name="arrow-back" size={24} color={theme.background} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Workouts</Text>
+        <Text style={[styles.headerTitle, { color: theme.background }]}>Workouts</Text>
         <TouchableOpacity onPress={navigateToAddWorkout} style={styles.addButton}>
-          <Ionicons name="add" size={24} color="#ffffff" />
+          <Ionicons name="add" size={24} color={theme.background} />
         </TouchableOpacity>
       </View>
 
       {/* Date Navigation */}
-      <View style={styles.dateNavigation}>
+      <View style={[styles.dateNavigation, { backgroundColor: theme.card }]}>
         <TouchableOpacity onPress={goToPreviousDay} style={styles.dateNavButton}>
-          <Ionicons name="chevron-back" size={24} color="#64748b" />
+          <Ionicons name="chevron-back" size={24} color={theme.secondary} />
         </TouchableOpacity>
         <View style={styles.dateContainer}>
-          <Text style={styles.dateText}>{formatDisplayDate(selectedDate)}</Text>
-          <Text style={styles.fullDateText}>
+          <Text style={[styles.dateText, { color: theme.text }]}>{formatDisplayDate(selectedDate)}</Text>
+          <Text style={[styles.fullDateText, { color: theme.secondary }]}>
             {selectedDate.toLocaleDateString('en-US', {
               weekday: 'long',
               year: 'numeric',
@@ -266,23 +268,20 @@ const WorkoutsView: React.FC = () => {
             })}
           </Text>
           {!isToday(selectedDate) && (
-            <TouchableOpacity onPress={goToToday} style={styles.todayButton}>
-              <Text style={styles.todayButtonText}>Today</Text>
+            <TouchableOpacity onPress={goToToday} style={[styles.todayButton, { backgroundColor: theme.primary }]}>
+              <Text style={[styles.todayButtonText, { color: theme.background }]}>Today</Text>
             </TouchableOpacity>
           )}
         </View>
         <TouchableOpacity 
           onPress={goToNextDay} 
-          style={[
-            styles.dateNavButton,
-            isToday(selectedDate) && styles.dateNavButtonDisabled
-          ]}
+          style={[styles.dateNavButton, isToday(selectedDate) && styles.dateNavButtonDisabled]}
           disabled={isToday(selectedDate)}
         >
           <Ionicons 
             name="chevron-forward" 
             size={24} 
-            color={isToday(selectedDate) ? '#d1d5db' : '#64748b'} 
+            color={isToday(selectedDate) ? theme.border : theme.secondary} 
           />
         </TouchableOpacity>
       </View>
@@ -290,18 +289,18 @@ const WorkoutsView: React.FC = () => {
       {/* Content */}
       {isLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#16a34a" />
+          <ActivityIndicator size="large" color={theme.primary} />
         </View>
       ) : workouts.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <MaterialCommunityIcons name="dumbbell" size={64} color="#d1d5db" />
-          <Text style={styles.emptyText}>No workouts found for this day</Text>
+          <MaterialCommunityIcons name="dumbbell" size={64} color={theme.border} />
+          <Text style={[styles.emptyText, { color: theme.secondary }]}>No workouts found for this day</Text>
           {isToday(selectedDate) && (
             <TouchableOpacity
-              style={styles.addWorkoutButton}
+              style={[styles.addWorkoutButton, { backgroundColor: theme.primary }]}
               onPress={navigateToAddWorkout}
             >
-              <Text style={styles.addWorkoutButtonText}>Add Workout</Text>
+              <Text style={[styles.addWorkoutButtonText, { color: theme.background }]}>Add Workout</Text>
             </TouchableOpacity>
           )}
         </View>
