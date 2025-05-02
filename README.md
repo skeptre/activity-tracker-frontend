@@ -1,50 +1,78 @@
-# Welcome to your Expo app 👋
+# Activity Tracker Frontend
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A modern, cross-platform mobile app for tracking physical activity, built with React Native and Expo.
 
-## Get started
+## Overview
 
-1. Install dependencies
+This app allows users to:
+- Track daily steps and workouts
+- View rankings and statistics
+- Sign up, log in, and manage their profile
+- Enjoy a modern UI with light and dark mode support
 
-   ```bash
-   yarn install
+## Features
+- **Expo Managed Workflow** for easy development and deployment
+- **React Native** for cross-platform support (iOS & Android)
+- **Dark Mode** and theming with a toggle in the settings
+- **Step tracking** using device sensors (Pedometer API)
+- **Authentication** (Sign up, Sign in, Profile management)
+- **Workouts**: Add, view, and track workouts
+- **API integration** with a backend server (see `api-spec.md`)
+
+## Getting Started
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v18 recommended)
+- [npm](https://www.npmjs.com/) (comes with Node.js)
+- [Expo CLI](https://docs.expo.dev/get-started/installation/):
+  ```sh
+  npm install -g expo-cli
+  ```
+
+### Installation
+1. Clone the repository:
+   ```sh
+   git clone <your-repo-url>
+   cd activity-tracker-frontend
+   ```
+2. Install dependencies:
+   ```sh
+   npm install
    ```
 
-2. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+### Environment Variables
+Create a `.env` file in the root directory. Example:
 ```
+API_URL=http://<your-backend-ip>:3333/api
+```
+- For local development, use your machine's IP address for real device testing.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Running the App
+- Start the Expo development server:
+  ```sh
+  npm start
+  ```
+- Use the Expo Go app on your device, or an emulator/simulator, to run the app.
 
-## Learn more
+## Theming & Dark Mode
+- The app supports both light and dark themes.
+- Users can toggle dark mode in the Settings screen.
+- All screens and components adapt to the selected theme.
 
-To learn more about developing your project with Expo, look at the following resources:
+## Troubleshooting
+- **Theme errors**: Ensure your `ThemeProvider` and all theme usages are consistent (see `app/providers/ThemeProvider.tsx`).
+- **API errors**: Check your `.env` and backend server status.
+- **Step tracking**: On Android, mock data may be used if the device lacks a pedometer.
+- **Dependencies**: Use npm (not yarn) for installing packages.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Contributing
+1. Fork the repo and create a feature branch.
+2. Make your changes and commit with clear messages.
+3. Push to your fork and open a pull request.
 
-## Join the community
+## License
+MIT
 
-Join our community of developers creating universal apps.
+---
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+For more details on API endpoints, see [`api-spec.md`](./api-spec.md).
