@@ -26,7 +26,8 @@
           "backgroundColor": "#ffffff",
           "imageWidth": "500%"
         }
-      ]
+      ],
+      "expo-font"
     ],
     "scheme": "myapp",
     "slug": "frontend-app",
